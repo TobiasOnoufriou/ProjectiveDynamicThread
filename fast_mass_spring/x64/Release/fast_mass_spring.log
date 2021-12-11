@@ -1,0 +1,12 @@
+﻿  simulation.cpp
+c:\users\space\onedrive\desktop\projective-dynamics-master\fast_mass_spring\source\primitive.h(111): warning C4305: 'initializing' : truncation from 'double' to 'float'
+source\simulation.cpp(154): warning C4018: '<' : signed/unsigned mismatch
+source\simulation.cpp(365): warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+source\simulation.cpp(383): warning C4018: '<' : signed/unsigned mismatch
+source\simulation.cpp(393): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+  Generating code
+  Finished generating code
+tinyxml_STL.lib(tinyxml.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml_STL.lib(tinyxml.obj)' or at 'C:\Users\space\OneDrive\Desktop\Projective-Dynamics-master\x64\Release\vc100.pdb'; linking object as if no debug info
+tinyxml_STL.lib(tinyxmlerror.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml_STL.lib(tinyxmlerror.obj)' or at 'C:\Users\space\OneDrive\Desktop\Projective-Dynamics-master\x64\Release\vc100.pdb'; linking object as if no debug info
+tinyxml_STL.lib(tinyxmlparser.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'tinyxml_STL.lib(tinyxmlparser.obj)' or at 'C:\Users\space\OneDrive\Desktop\Projective-Dynamics-master\x64\Release\vc100.pdb'; linking object as if no debug info
+  fast_mass_spring.vcxproj -> C:\Users\space\OneDrive\Desktop\Projective-Dynamics-master\x64\Release\fast_mass_spring.exe
