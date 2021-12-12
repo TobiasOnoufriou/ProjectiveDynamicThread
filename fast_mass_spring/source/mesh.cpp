@@ -686,6 +686,7 @@ void TetMesh::generateTriangleList()
 
 bool RopeMesh::Init() {
 	generateParticleList();
+	generateEdgeList();
 
 	return true;
 }
@@ -696,6 +697,14 @@ void RopeMesh::GetMeshInfo(char* info) {
 
 void RopeMesh::generateEdgeList() {
 	// Generate edges here. Needed for the initialisation of the simulation.
+	unsigned int vert_num = m_vertices_number;
+	for (unsigned int i = 0; i < vert_num-1; ++i) {
+		Edge new_edge;
+		new_edge.m_v1 = i;
+		new_edge.m_v1 = i + 1;
+		m_edge_list.push_back(new_edge);
+	}
+
 }
 
 void RopeMesh::generateParticleList() {
@@ -707,9 +716,9 @@ void RopeMesh::generateParticleList() {
 	EigenVector3 delta;
 	// Will need something similar to m_corners input on AntTweakBar DONE.
 	EigenVector3 rope_end = EigenVector3(m_rope_start[0] - m_joints, m_rope_start[1] - m_joints, m_rope_start[2] - m_joints);
-	delta[0] = (m_rope_start[0] - rope_end[0]) / (ScalarType)(m_joints);
-	delta[1] = (m_rope_start[1] - rope_end[1]) / (ScalarType)(m_joints);
-	delta[2] = (m_rope_start[2] - rope_end[2]) / (ScalarType)(m_joints);
+	delta[0] = (m_rope_start[0] + rope_end[0]) / (ScalarType)(m_joints * 4);
+	delta[1] = (m_rope_start[1] + rope_end[1]) / (ScalarType)(m_joints * 4);
+	delta[2] = (m_rope_start[2] + rope_end[2]) / (ScalarType)(m_joints * 4);
 
 	ScalarType unit_mass = m_total_mass / m_vertices_number;
 
@@ -739,7 +748,6 @@ void RopeMesh::generateParticleList() {
 		//std::cout << delta[1] * i + m_rope_start[1] << std::endl;
 		m_current_positions.block<3, 1>(3*i, 0) = EigenVector3(m_rope_start[0], delta[1] * i + m_rope_start[1], m_rope_start[2]);
 	}
-	std::cout << m_current_positions;
 	// Assign initial velocity to zero
 	m_current_velocities.setZero();
 

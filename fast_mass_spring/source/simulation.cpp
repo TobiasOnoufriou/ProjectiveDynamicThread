@@ -698,10 +698,32 @@ void Simulation::setupConstraints()
 	switch(m_mesh->m_mesh_type)
 	{
 	case MESH_TYPE_ROPE:
-		AddAttachmentConstraint(0);
-		//EigenVector3 p1, p2;
-		// Add edge to mesh.
+	{
+		EigenVector3 pR1, pR2;
+		for (std::vector<Edge>::iterator e = m_mesh->m_edge_list.begin(); e != m_mesh->m_edge_list.end(); ++e)
+		{
+			pR1 = m_mesh->m_current_positions.block_vector(e->m_v1);
+			pR2 = m_mesh->m_current_positions.block_vector(e->m_v2);
+			SpringConstraint* c = new SpringConstraint(&m_stiffness_stretch, e->m_v1, e->m_v2, (pR1 - pR2).norm());
+			m_constraints.push_back(c);
+			m_mesh->m_expanded_system_dimension += 6;
+			m_mesh->m_expanded_system_dimension_1d += 2;
+		}
 
+		// Setting up the bending constraints
+		for (std::vector<Edge>::iterator e = m_mesh->m_edge_list.begin(); e != m_mesh->m_edge_list.end(); ++e)
+		{
+			pR1 = m_mesh->m_current_positions.block_vector(e->m_v1);
+			pR2 = m_mesh->m_current_positions.block_vector(e->m_v2);
+			SpringConstraint* c = new SpringConstraint(&m_stiffness_bending, e->m_v1, e->m_v2, (pR1 - pR2).norm());
+			m_constraints.push_back(c);
+			m_mesh->m_expanded_system_dimension += 6;
+			m_mesh->m_expanded_system_dimension_1d += 2;
+		}
+
+		AddAttachmentConstraint(0);
+		// Add edge to mesh.
+	}
 		break;
 	case MESH_TYPE_CLOTH:
 		// procedurally generate constraints including to attachment constraints
