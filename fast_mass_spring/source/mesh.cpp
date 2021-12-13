@@ -701,10 +701,9 @@ void RopeMesh::generateEdgeList() {
 	for (unsigned int i = 0; i < vert_num-1; ++i) {
 		Edge new_edge;
 		new_edge.m_v1 = i;
-		new_edge.m_v1 = i + 1;
+		new_edge.m_v2 = i + 1;
 		m_edge_list.push_back(new_edge);
 	}
-
 }
 
 void RopeMesh::generateParticleList() {

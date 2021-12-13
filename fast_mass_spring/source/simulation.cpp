@@ -391,7 +391,6 @@ void Simulation::Update()
 				int constraintType;
 
 				int num_parallel_loops = ceil( m_constraints.size() / (float) omp_get_max_threads() );
-				#pragma omp for
 				for (int j = 0; j < num_parallel_loops; j++)
 				{
 					#pragma omp parallel default(shared) private(c_j, p_j, tn, sc, ac, tc, current_stretch, current_vector)
