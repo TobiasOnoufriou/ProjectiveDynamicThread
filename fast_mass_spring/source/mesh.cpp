@@ -81,6 +81,9 @@ void Mesh::DrawLine(const VBO& vbos, int line_width) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbos.m_cbo);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	glm::mat4 identity = glm::mat4(); // identity matrix
+	glUniformMatrix4fv(vbos.m_uniform_transformation, 1, false, &identity[0][0]);
+
 	glDrawArrays(GL_LINE_STRIP, 0, m_joints); // When using GL_LINE it would skip the lines in between.
 
 	glDisableVertexAttribArray(0);

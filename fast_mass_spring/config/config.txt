@@ -1,38 +1,38 @@
 HasEnd              0
 TotalFrame          1000
 MeshBody            1
-Wireframe           1
+Wireframe           0
 Wireframe           1
 Texture             0
-ScreenWidth         1920
-ScreenHeight        1009
+ScreenWidth         2560
+ScreenHeight        1377
 
-MeshType            0
+MeshType            2
 MeshMass            1
-TetFilePath         ./mesh_models/bar4099.mesh
+TetFilePath         ./mesh_models/cube86.mesh
 TetScaling          1
 TetFlip             0
-ClothDimension      50 50
-ClothCorners        -5 8 -5 5 8 5
-RopeLength			10
-RopeStart			0 0 0 
+ClothDimension      21 21
+ClothCorners        -5 8 -5 5 -1.85 -3.26
+RopeLength			100
+RopeStart			5 5 5 
 
 SimMethod           1
-Timestep            0.01
+Timestep            0.0333
 QuasiStatics        0
 Subspace            1
-AttachmentStiffness 75
-StretchStiffness    20
-BendingStiffness    20
+AttachmentStiffness 758
+StretchStiffness    0
+BendingStiffness    264
 GravityConstant     9.8
 DampingCoefficient  0.001
-IterationsPerFrame  1
+IterationsPerFrame  5
 LSEnable            1
 LSStep              1
 LSAlpha             0.25
 LSBeta              0.1
 AnimEnableSwing     0
 AnimSwingAll        1
-AnimHalfPeriod      54
-AnimAmp             4
+AnimHalfPeriod      10
+AnimAmp             2
 AnimDir             0 1 0
