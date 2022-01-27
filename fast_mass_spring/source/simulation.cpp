@@ -867,4 +867,11 @@ VectorX Simulation::collisionDetection(const VectorX x)
 	}
 
 	return penetration;
+bool Simulation::selfCollisionDetection(EigenVector3& p, ScalarType dist) {
+	dist = 0;
+	//Loop through each point which is not its own point to check if it has collided.
+	// Parse the block_vector(i) .. then loop through every point and check the distance.
+	// if i == block_vector(xi) .. skip
+	//for(unsigned int i = 0; i < 0; i++)
+	return false;
 }

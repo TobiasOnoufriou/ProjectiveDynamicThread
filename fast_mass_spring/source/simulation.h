@@ -173,6 +173,7 @@ private:
 	void dampVelocity(); // damp velocity at the end of each iteration.
 	void calculateInertiaY(); // calculate the inertia term: y = current_pos + current_vel*h
 	void calculateExternalForce(); // wind force is propotional to the area of triangles projected on the tangential plane
+	bool selfCollisionDetection(EigenVector3& p, ScalarType dist);
 	VectorX collisionDetection(const VectorX x); // detect collision and return a vector of penetration
 
 	// there should also be such functions that...
