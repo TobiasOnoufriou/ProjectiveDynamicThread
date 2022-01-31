@@ -835,19 +835,19 @@ VectorX Simulation::collisionDetection(const VectorX x)
 
 		if (m_scene->StaticIntersectionTest(xi, normal, dist))
 		{
-			penetration.block_vector( i ) +=  dist * normal;
+			penetration.block_vector(i) += dist * normal;
 
 			isColliding[i] = true;
 
 			// TODO: update velocity
 
-			vel = m_mesh->m_current_velocities.block_vector( i );
+			vel = m_mesh->m_current_velocities.block_vector(i);
 
 			// compute component of velocity parallel to normal at collision surface point
 			// glm::dot( vel, normal ) = signed length of projection of vel onto any line parallel to normal
 			// divide by glm::dot( normal, normal ) to remove any scaling caused by normal's magnitude
 			// multiply by normal to convert previously computed scalar into a vector with direction parallel to normal
-			vn = vel.dot( normal ) / normal.dot( normal ) * normal;
+			vn = vel.dot(normal) / normal.dot(normal) * normal;
 
 			// compute component of velocity perpendicular to normal at collision surface point
 			vt = vel - vn;
@@ -860,18 +860,58 @@ VectorX Simulation::collisionDetection(const VectorX x)
 			vn = vn * -1.0f;
 
 			// set particle velocity to dampened velocity
-			m_mesh->m_current_velocities.block_vector( i ) = vn + vt;
+			m_mesh->m_current_velocities.block_vector(i) = vn + vt;
 		}
+		/*if (this->selfCollisionDetection(xi,normal,i,dist)) {
+			penetration.block_vector(i) += dist * normal;
+			
+			isColliding[i] = true;
+
+			vel = m_mesh->m_current_velocities.block_vector(i);
+
+			vn = vel.dot(normal) / normal.dot(normal) * normal;
+
+			// compute component of velocity perpendicular to normal at collision surface point
+			vt = vel - vn;
+
+			// damp velocity components
+			vn = vn * restitution;
+			vt = vt * friction;
+
+			// reflect velocity component parallel to collision normal
+			vn = vn * -1.0f;
+
+			// set particle velocity to dampened velocity
+			m_mesh->m_current_velocities.block_vector(i) = vn + vt;
+		}*/
 
 		else isColliding[i] = false;
 	}
 
 	return penetration;
-bool Simulation::selfCollisionDetection(EigenVector3& p, ScalarType dist) {
+}
+
+
+bool Simulation::selfCollisionDetection(EigenVector3& p, EigenVector3& normal, unsigned int index, ScalarType& dist) {
 	dist = 0;
 	//Loop through each point which is not its own point to check if it has collided.
 	// Parse the block_vector(i) .. then loop through every point and check the distance.
 	// if i == block_vector(xi) .. skip
 	//for(unsigned int i = 0; i < 0; i++)
-	return false;
+	for (unsigned int i = 0; i < m_constraints.size(); ++i) {
+		ScalarType d;
+		EigenVector3 n;
+		if (i != index) {
+			if (selfCollisionDetection(p,normal, i, d)) {
+				if (d < dist) {
+					dist = d;
+					normal = n;
+				}
+			}
+		}
+	}
+	if (dist < 0)
+		return true;
+	else
+		return false;
 }
