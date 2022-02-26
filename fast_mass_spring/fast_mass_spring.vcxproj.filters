@@ -182,5 +182,13 @@
     <ClInclude Include="source\simpleTimer.h">
       <Filter>Source Files\simulation\simulation</Filter>
     </ClInclude>
+    <ClInclude Include="source\converge.cuh">
+      <Filter>Source Files\simulation\simulation</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="source\converge.cu">
+      <Filter>Source Files\simulation\simulation</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

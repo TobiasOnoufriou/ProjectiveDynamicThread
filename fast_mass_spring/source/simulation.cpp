@@ -31,10 +31,14 @@
 #include <omp.h>
 #include <exception>
 
+
+
 #include "simulation.h"
 #include "timer_wrapper.h"
 
 #include "simpleTimer.h"
+
+
 
 TimerWrapper g_integration_timer;
 
@@ -389,12 +393,16 @@ void Simulation::Update()
 				EigenVector3 current_vector;
 				ScalarType current_stretch;
 				int constraintType;
-
+				
 				int num_parallel_loops = ceil( m_constraints.size() / (float) omp_get_max_threads() );
 				for (int j = 0; j < num_parallel_loops; j++)
 				{
-					#pragma omp parallel default(shared) private(c_j, p_j, tn, sc, ac, tc, current_stretch, current_vector)
+					//Parse
+					//Converge::Converge(c_j, p_spring, p_attach, p_j, q_n1, current_stretch, current_vector, &b);
+					//After Completion b needs to be Mapped using Eigen::Map.
+					/*#pragma omp parallel default(	) private(c_j, p_j, tn, sc, ac, tc, current_stretch, current_vector)
 					{
+						
 						tn = omp_get_thread_num() + j*omp_get_max_threads();
 						if (tn < m_constraints.size())
 						{
@@ -403,6 +411,7 @@ void Simulation::Update()
 
 							#pragma omp critical
 							{
+								// On the GPU Seprate SPRING and Attachment
 								if (constraintType == SPRING) // is spring constraint
 								{
 									sc = (SpringConstraint *) c_j;
@@ -451,7 +460,7 @@ void Simulation::Update()
 								b += *p_j;
 							}
 						}
-					}
+					}*/
 				}			
 				// GLOBAL SOLVE STEP
 				q_n1 = m_llt.solve(b);

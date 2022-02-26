@@ -34,10 +34,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "global_headers.h"
 #include "math_headers.h"
+#include "global_headers.h"
 #include "opengl_headers.h"
 #include "primitive.h"
+
 
 enum {ATTACHMENT, SPRING, TET};
 
@@ -124,9 +125,9 @@ protected:
 	ScalarType m_rest_length;
 
 public:
-	inline ScalarType GetRestLength(void) { return m_rest_length; }
-	inline unsigned int GetConstrainedVertexIndex1(void) { return m_p1; }
-	inline unsigned int GetConstrainedVertexIndex2(void) { return m_p2; }
+	__host__ __device__ inline ScalarType GetRestLength(void) { return m_rest_length; }
+	__host__ __device__ inline unsigned int GetConstrainedVertexIndex1(void) { return m_p1; }
+	__host__ __device__ inline unsigned int GetConstrainedVertexIndex2(void) { return m_p2; }
 };
 
 class TetConstraint : public Constraint

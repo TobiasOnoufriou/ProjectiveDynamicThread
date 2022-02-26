@@ -31,11 +31,12 @@
 #define _SIMULATION_H_
 
 #include <vector>
+#include "converge.cuh"
 
+#include "constraint.h"
 #include "global_headers.h"
 #include "anttweakbar_wrapper.h"
 #include "mesh.h"
-#include "constraint.h"
 #include "scene.h"
 
 class Mesh;

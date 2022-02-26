@@ -35,6 +35,8 @@
 #include "Dense"
 #include "Sparse"
 
+#include "Eigenvalues" 
+
 // glm
 #include "glm.hpp"
 #include "gtc\matrix_transform.hpp"

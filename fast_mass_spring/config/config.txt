@@ -4,8 +4,8 @@ MeshBody            1
 Wireframe           0
 Wireframe           1
 Texture             0
-ScreenWidth         2560
-ScreenHeight        1377
+ScreenWidth         1920
+ScreenHeight        1009
 
 MeshType            2
 MeshMass            1

@@ -1,0 +1,77 @@
+﻿  simulation.cpp
+c:\users\space\onedrive\desktop\projective-dynamics-master\fast_mass_spring\source\primitive.h(111): warning C4305: 'initializing' : truncation from 'double' to 'float'
+c:\users\space\onedrive\desktop\projective-dynamics-master\fast_mass_spring\source\simulation.cpp(154): warning C4018: '<' : signed/unsigned mismatch
+c:\users\space\onedrive\desktop\projective-dynamics-master\fast_mass_spring\source\simulation.cpp(305): warning C4018: '<' : signed/unsigned mismatch
+c:\users\space\onedrive\desktop\projective-dynamics-master\fast_mass_spring\source\simulation.cpp(383): warning C4018: '<' : signed/unsigned mismatch
+c:\users\space\onedrive\desktop\projective-dynamics-master\fast_mass_spring\source\simulation.cpp(393): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+  stb_image_write.c
+  stb_image.c
+  Generating Code...
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewIsBuffer
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewDeleteBuffers
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewUseProgram
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramiv
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewLinkProgram
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewAttachShader
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewBindAttribLocation
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderiv
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewCompileShader
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewShaderSource
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewCreateProgram
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewCreateShader
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewActiveTexture
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewDeleteProgram
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewDeleteShader
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewDetachShader
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+primitive.obj : error LNK2019: unresolved external symbol __imp____glewUniformMatrix4fv referenced in function "protected: void __thiscall ObjMesh::read_from_file(char *)" (?read_from_file@ObjMesh@@IAEXPAD@Z)
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramInfoLog
+glsl_wrapper.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderInfoLog
+main.obj : error LNK2019: unresolved external symbol __imp__glutMainLoop@0 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutIdleFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutCloseFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutMouseWheelFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutPassiveMotionFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutMotionFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutMouseFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutKeyboardFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutReshapeFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutTimerFunc@12 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutDisplayFunc@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutReshapeWindow@8 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutInitWindowSize@8 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glutInitDisplayMode@4 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp____glutInitWithExit@12 referenced in function _glutInit_ATEXIT_HACK@8
+main.obj : error LNK2019: unresolved external symbol __imp____glutCreateWindowWithExit@8 referenced in function _glutCreateWindow_ATEXIT_HACK@4
+main.obj : error LNK2019: unresolved external symbol __imp__glutPostRedisplay@0 referenced in function "void __cdecl resize(int,int)" (?resize@@YAXHH@Z)
+main.obj : error LNK2019: unresolved external symbol __imp__glutSwapBuffers@0 referenced in function "void __cdecl display(void)" (?display@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol __imp__glutGetModifiers@0 referenced in function "void __cdecl mouse_click(int,int,int,int)" (?mouse_click@@YAXHHHH@Z)
+main.obj : error LNK2019: unresolved external symbol __imp__glewIsSupported@4 referenced in function "void __cdecl init(void)" (?init@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol __imp__glewInit@0 referenced in function "void __cdecl init(void)" (?init@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol __imp__glutBitmapCharacter@8 referenced in function "void __cdecl draw_overlay(void)" (?draw_overlay@@YAXXZ)
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewDisableVertexAttribArray
+primitive.obj : error LNK2001: unresolved external symbol __imp____glewDisableVertexAttribArray
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+primitive.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewEnableVertexAttribArray
+primitive.obj : error LNK2019: unresolved external symbol __imp____glewEnableVertexAttribArray referenced in function "public: virtual void __thiscall Primitive::Draw(struct VBO const &)" (?Draw@Primitive@@UAEXABUVBO@@@Z)
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+primitive.obj : error LNK2019: unresolved external symbol __imp____glewBufferData referenced in function "public: virtual void __thiscall Primitive::Draw(struct VBO const &)" (?Draw@Primitive@@UAEXABUVBO@@@Z)
+mesh.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+primitive.obj : error LNK2019: unresolved external symbol __imp____glewBindBuffer referenced in function "public: virtual void __thiscall Primitive::Draw(struct VBO const &)" (?Draw@Primitive@@UAEXABUVBO@@@Z)
+scene.obj : error LNK2019: unresolved external symbol "public: virtual bool __thiscall TiXmlDocument::Accept(class TiXmlVisitor *)const " (?Accept@TiXmlDocument@@UBE_NPAVTiXmlVisitor@@@Z) referenced in function "public: void __thiscall Scene::LoadFromFile(char const *)" (?LoadFromFile@Scene@@QAEXPBD@Z)
+scene.obj : error LNK2019: unresolved external symbol "public: bool __thiscall TiXmlDocument::LoadFile(enum TiXmlEncoding)" (?LoadFile@TiXmlDocument@@QAE_NW4TiXmlEncoding@@@Z) referenced in function "public: void __thiscall Scene::LoadFromFile(char const *)" (?LoadFromFile@Scene@@QAEXPBD@Z)
+scene.obj : error LNK2019: unresolved external symbol "public: __thiscall TiXmlDocument::TiXmlDocument(char const *)" (??0TiXmlDocument@@QAE@PBD@Z) referenced in function "public: void __thiscall Scene::LoadFromFile(char const *)" (?LoadFromFile@Scene@@QAEXPBD@Z)
+scene.obj : error LNK2019: unresolved external symbol "public: virtual __thiscall TiXmlNode::~TiXmlNode(void)" (??1TiXmlNode@@UAE@XZ) referenced in function "public: virtual __thiscall TiXmlDocument::~TiXmlDocument(void)" (??1TiXmlDocument@@UAE@XZ)
+scene.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall TiXmlDocument::Print(struct _iobuf *,int)const " (?Print@TiXmlDocument@@UBEXPAU_iobuf@@H@Z)
+scene.obj : error LNK2001: unresolved external symbol "public: virtual char const * __thiscall TiXmlDocument::Parse(char const *,class TiXmlParsingData *,enum TiXmlEncoding)" (?Parse@TiXmlDocument@@UAEPBDPBDPAVTiXmlParsingData@@W4TiXmlEncoding@@@Z)
+scene.obj : error LNK2001: unresolved external symbol "protected: virtual class TiXmlNode * __thiscall TiXmlDocument::Clone(void)const " (?Clone@TiXmlDocument@@MBEPAVTiXmlNode@@XZ)
+scene.obj : error LNK2001: unresolved external symbol "protected: virtual void __thiscall TiXmlDocument::StreamIn(class std::basic_istream<char,struct std::char_traits<char> > *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > *)" (?StreamIn@TiXmlDocument@@MAEXPAV?$basic_istream@DU?$char_traits@D@std@@@std@@PAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z)
+scene.obj : error LNK2019: unresolved external symbol "public: char const * __thiscall TiXmlElement::Attribute(char const *,double *)const " (?Attribute@TiXmlElement@@QBEPBDPBDPAN@Z) referenced in function "public: virtual bool __thiscall XMLSceneVisitor::VisitEnter(class TiXmlElement const &,class TiXmlAttribute const *)" (?VisitEnter@XMLSceneVisitor@@UAE_NABVTiXmlElement@@PBVTiXmlAttribute@@@Z)
+scene.obj : error LNK2019: unresolved external symbol "public: class TiXmlDocument const * __thiscall TiXmlNode::GetDocument(void)const " (?GetDocument@TiXmlNode@@QBEPBVTiXmlDocument@@XZ) referenced in function "public: virtual bool __thiscall XMLSceneVisitor::VisitEnter(class TiXmlElement const &,class TiXmlAttribute const *)" (?VisitEnter@XMLSceneVisitor@@UAE_NABVTiXmlElement@@PBVTiXmlAttribute@@@Z)
+C:\Users\space\OneDrive\Desktop\Projective-Dynamics-master\Debug\fast_mass_spring.exe : fatal error LNK1120: 59 unresolved externals
