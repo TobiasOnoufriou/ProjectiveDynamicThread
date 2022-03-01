@@ -55,6 +55,16 @@ Constraint::~Constraint()
 {
 }
 
+VectorX Constraint::ConvertCVectorToEigen(double* arr, int length){
+	typedef Eigen::Map<VectorX> MapType;
+	typedef Eigen::Map<const VectorX> MapTypeConst;
+	VectorX v;
+
+	v = MapType(arr, length, 1);
+
+	return v;
+}
+
 //----------AttachmentConstraint Class----------//
 AttachmentConstraint::AttachmentConstraint(ScalarType *stiffness) : 
 	Constraint(stiffness)

@@ -711,6 +711,7 @@ void Simulation::setupConstraints()
 			pR1 = m_mesh->m_current_positions.block_vector(e->m_v1);
 			pR2 = m_mesh->m_current_positions.block_vector(e->m_v2);
 			SpringConstraint* c = new SpringConstraint(&m_stiffness_stretch, e->m_v1, e->m_v2, (pR1 - pR2).norm());
+			CudaSpringConstraint* cc = new CudaSpringConstraint(e->m_v1, e->m_v2, (pR1 - pR2).norm());
 			m_constraints.push_back(c);
 			m_mesh->m_expanded_system_dimension += 6;
 			m_mesh->m_expanded_system_dimension_1d += 2;

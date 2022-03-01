@@ -33,6 +33,8 @@
 #include <vector>
 #include "converge.cuh"
 
+
+#include "CudaConstraint.h"
 #include "constraint.h"
 #include "global_headers.h"
 #include "anttweakbar_wrapper.h"
@@ -128,6 +130,7 @@ protected:
 	Scene *m_scene;
 	// key simulation components: constraints
 	std::vector<Constraint*> m_constraints;
+	std::vector<CudaConstraint*> m_cuda_constraints;
 	AttachmentConstraint* m_selected_attachment_constraint;
 
 	// inertia term
