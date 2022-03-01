@@ -185,6 +185,9 @@
     <ClInclude Include="source\converge.cuh">
       <Filter>Source Files\simulation\simulation</Filter>
     </ClInclude>
+    <ClInclude Include="CudaConstraint.h">
+      <Filter>Source Files\simulation\simulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="source\converge.cu">

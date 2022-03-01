@@ -9,11 +9,11 @@ __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> q_n1;*/
 
 
 
-__global__ void localStep(Constraint* m_constraint, VectorX& p_spring, VectorX* p_attach, VectorX* p_j, VectorX* q_n1, VectorX* b) {
-	Constraint* cj;
-	ScalarType current_strecth; 
-	EigenVector3 current_vector;
-	int cSize = sizeof m_constraint / sizeof * m_constraint;
+__global__ void localStep(double * p_spring, double* p_attach, double* p_j, double* q_n1, double* b ) {
+	//Constraint* cj;
+	//ScalarType current_strecth; 
+	//EigenVector3 current_vector;
+	//int cSize = sizeof m_constraint / sizeof * m_constraint;
 	int idx = threadIdx.x;
 	int idy = threadIdx.y;
 	//Parse in the constraint
@@ -21,7 +21,11 @@ __global__ void localStep(Constraint* m_constraint, VectorX& p_spring, VectorX* 
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 	int stride = blockDim.x * gridDim.x;
 
-	for (int i = index; i < cSize; i += stride) {
+	//p_j is just a Matrix.
+
+	//Getting cons
+
+	/*for (int i = index; i < cSize; i += stride) {
 		cj = &m_constraint[i];
 		if (cj->constraintType == SPRING) {
 			// Work out spring constraint.
@@ -30,7 +34,7 @@ __global__ void localStep(Constraint* m_constraint, VectorX& p_spring, VectorX* 
 			current_strecth = current_vector.norm() - sc->GetRestLength();
 			current_vector = (current_strecth / 2.0) * current_vector.normalized();
 
-			p_j = &p_spring;
+			p_j = p_spring;
 			p_j->block_vector(0) = q_n1->block_vector(sc->GetConstrainedVertexIndex1()) - current_vector;
 			p_j->block_vector(1) = q_n1->block_vector(sc->GetConstrainedVertexIndex2()) + current_vector;
 		}
@@ -39,45 +43,53 @@ __global__ void localStep(Constraint* m_constraint, VectorX& p_spring, VectorX* 
 		}
 		//cj->m_RHS.applyThisOnTheLeft(*p_j);
 		*b += *p_j;
-	}
+	}*/
 
 }
 
 // h -> defines host
 // d -> defines device
-void Converge::Converge(Constraint& cj, VectorX& h_spring, VectorX& h_attach, VectorX& h_pj, VectorX& h_qn1, VectorX& h_b) {
+//Return b 
+void Converge::Converge(double* h_spring, double* h_attach, double* h_pj, double* h_qn1, double* h_b) {
 
-	VectorX* d_b, *d_pj, *d_qn1, *d_pspring, *d_pattach; //Device memory.
-	Constraint* d_cj;
+	double *d_b, *d_pj, *d_qn1, *d_pspring, *d_pattach; //Device memory.
+	//Constraint* d_cj;
 	//spring.data 
 	//Instead of directly using Eigen use .data and conver it to a float3
 
-	cudaMalloc((void**)&d_cj, sizeof(Constraint));
-	cudaMalloc((void**)&d_b, sizeof(VectorX)*h_b.size());
-	cudaMalloc((void**)&d_pj, sizeof(VectorX)*h_pj.size());
+	d_b = h_b;
+	d_pj = h_pj;
+	d_qn1 = h_qn1;
+	d_pspring = h_spring;
+	d_pattach = h_attach;
+
+
+	//cudaMalloc((void**)&d_cj, sizeof(Constraint));
+	cudaMalloc((void**)&d_b, sizeof(double*));
+	cudaMalloc((void**)&d_pj, sizeof(double*));
 	//Pspring
-	cudaMalloc((void**)&d_pspring, sizeof(VectorX) * h_spring.size());
+	cudaMalloc((void**)&d_pspring, sizeof(double*));
 	//pAttach
-	cudaMalloc((void**)&d_pattach, sizeof(VectorX) * h_attach.size());
+	cudaMalloc((void**)&d_pattach, sizeof(double*));
 	//qn1
-	cudaMalloc((void**)&d_qn1, sizeof(VectorX) * h_qn1.size());
+	cudaMalloc((void**)&d_qn1, sizeof(double*));
 	
 
-	cudaMemcpy(d_cj, &cj, sizeof(Constraint), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_b, h_b.data(), sizeof(VectorX)* h_b.size(), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pj, h_pj.data(), sizeof(VectorX) * h_pj.size(), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pspring, h_spring.data(), sizeof(VectorX) * h_spring.size(), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pattach, h_attach.data(), sizeof(VectorX) * h_attach.size(), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_qn1, d_qn1->data(), sizeof(VectorX) * h_qn1.size(), cudaMemcpyHostToDevice);
+	//cudaMemcpy(d_cj, &cj, sizeof(Constraint), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_b, h_b, sizeof(double*), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_pj, h_pj, sizeof(double*), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_pspring, h_spring, sizeof(double*), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_pattach, h_attach, sizeof(double*), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_qn1, h_qn1, sizeof(double*), cudaMemcpyHostToDevice);
 
-	localStep<<<1, SIZE >>>(d_cj, 
-		d_pspring, 
+	localStep<<<1, SIZE >>>(
+		d_pspring,
 		d_pattach, 
 		d_pj, 
 		d_qn1,
 		d_b
 		);
-
+	
 	cudaDeviceSynchronize();
 }
 	

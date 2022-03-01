@@ -153,6 +153,7 @@
     <ClCompile Include="source\stb_image_write.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CudaConstraint.h" />
     <ClInclude Include="source\converge.cuh" />
     <ClInclude Include="source\anttweakbar_wrapper.h" />
     <ClInclude Include="source\camera.h" />

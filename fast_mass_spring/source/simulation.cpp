@@ -398,9 +398,9 @@ void Simulation::Update()
 				for (int j = 0; j < num_parallel_loops; j++)
 				{
 					//Parse
-					//Converge::Converge(c_j, p_spring, p_attach, p_j, q_n1, current_stretch, current_vector, &b);
+					//Converge::Converge(p_spring.data(), p_attach.data(), p_j->data(), q_n1.data(), b.data());
 					//After Completion b needs to be Mapped using Eigen::Map.
-					/*#pragma omp parallel default(	) private(c_j, p_j, tn, sc, ac, tc, current_stretch, current_vector)
+					#pragma omp parallel default(shared) private(c_j, p_j, tn, sc, ac, tc, current_stretch, current_vector)
 					{
 						
 						tn = omp_get_thread_num() + j*omp_get_max_threads();
@@ -455,17 +455,15 @@ void Simulation::Update()
 									p_j->block_vector( 2 ) = tet_verts_new.block_vector( 2 );
 									p_j->block_vector( 3 ) = tet_verts_new.block_vector( 3 );
 								}
-
 								c_j->m_RHS.applyThisOnTheLeft(*p_j);
 								b += *p_j;
 							}
 						}
-					}*/
+					}
 				}			
 				// GLOBAL SOLVE STEP
 				q_n1 = m_llt.solve(b);
 			}
-
 			VectorX v_n1 = (q_n1 - q_n)/m_h;
 			m_mesh->m_current_positions = q_n1;
 			m_mesh->m_current_velocities = v_n1;

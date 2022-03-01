@@ -18,15 +18,15 @@ RopeLength			100
 RopeStart			5 5 5 
 
 SimMethod           1
-Timestep            0.0333
+Timestep            0.0442
 QuasiStatics        0
 Subspace            1
 AttachmentStiffness 758
-StretchStiffness    0
+StretchStiffness    600
 BendingStiffness    264
 GravityConstant     9.8
 DampingCoefficient  0.001
-IterationsPerFrame  5
+IterationsPerFrame  1
 LSEnable            1
 LSStep              1
 LSAlpha             0.25

@@ -42,6 +42,11 @@
 
 enum {ATTACHMENT, SPRING, TET};
 
+struct CudaConstraint {
+	
+};
+
+
 class Constraint
 {
 public:
@@ -125,9 +130,9 @@ protected:
 	ScalarType m_rest_length;
 
 public:
-	__host__ __device__ inline ScalarType GetRestLength(void) { return m_rest_length; }
-	__host__ __device__ inline unsigned int GetConstrainedVertexIndex1(void) { return m_p1; }
-	__host__ __device__ inline unsigned int GetConstrainedVertexIndex2(void) { return m_p2; }
+	inline ScalarType GetRestLength(void) { return m_rest_length; }
+	inline unsigned int GetConstrainedVertexIndex1(void) { return m_p1; }
+	inline unsigned int GetConstrainedVertexIndex2(void) { return m_p2; }
 };
 
 class TetConstraint : public Constraint
