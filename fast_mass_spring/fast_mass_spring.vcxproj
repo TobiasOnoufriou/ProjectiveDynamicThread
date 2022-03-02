@@ -154,6 +154,7 @@
     <ClCompile Include="source\stb_image_write.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\helper.h" />
     <ClInclude Include="source\CudaConstraint.h" />
     <ClInclude Include="source\converge.cuh" />
     <ClInclude Include="source\anttweakbar_wrapper.h" />

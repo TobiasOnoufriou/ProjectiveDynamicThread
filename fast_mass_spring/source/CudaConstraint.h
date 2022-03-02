@@ -12,6 +12,8 @@ public:
 
 	int* row, *col;
 	double* value;
+
+	int constraint;
 };
 
 class CudaSpringConstraint: public CudaConstraint {
@@ -20,7 +22,7 @@ class CudaSpringConstraint: public CudaConstraint {
 	// Getting the Constrained Vertex   // 
 	public:
 		CudaSpringConstraint(unsigned int index1, unsigned int index2, double rest_length);
-	protected: 
+	public: 
 		unsigned int m_index1, m_index2;
 		double m_rest_length;
 	public:

@@ -315,23 +315,23 @@ void Simulation::CreateRHSMatrix()
 		Constraint* c = m_constraints[i];
 		SparseMatrix A_i;
 		SparseMatrix B_i;
-		
+
 		// is attachment constraint
-		AttachmentConstraint *ac;
+		AttachmentConstraint* ac;
 		if (ac = dynamic_cast<AttachmentConstraint*>(c)) {
 			A_i = m_A_attachment;
 			B_i = m_B_attachment;
 		}
 
 		// is spring constraint
-		SpringConstraint *sc;
+		SpringConstraint* sc;
 		if (sc = dynamic_cast<SpringConstraint*>(c)) {
 			A_i = m_A_spring;
 			B_i = m_B_spring;
 		}
-	
+
 		// is tet constraint
-		TetConstraint *tc;
+		TetConstraint* tc;
 		if (tc = dynamic_cast<TetConstraint*>(c)) {
 			A_i = m_A_tet;
 			B_i = m_B_tet;
@@ -339,12 +339,12 @@ void Simulation::CreateRHSMatrix()
 
 		ScalarType w_i = c->Stiffness();
 		SparseMatrix S_i = CreateSMatrix(c);
-		SparseMatrix S_i_transpose = S_i.transpose();			
+		SparseMatrix S_i_transpose = S_i.transpose();
 		S_i_transpose.applyThisOnTheLeft(A_i);
 		A_i.applyThisOnTheLeft(B_i);
 		c->m_RHS = w_i * B_i;
 		c->ConvertSparseMatrixToCArray(cc);
-	}
+	}	
 }
 
 
@@ -475,6 +475,8 @@ void Simulation::Update()
 								}
 								c_j->m_RHS.applyThisOnTheLeft(*p_j);
 								b += *p_j;
+
+								
 							}
 						}
 					}
@@ -485,7 +487,6 @@ void Simulation::Update()
 			VectorX v_n1 = (q_n1 - q_n)/m_h;
 			m_mesh->m_current_positions = q_n1;
 			m_mesh->m_current_velocities = v_n1;
-		
 			break;
 		}
 	}
