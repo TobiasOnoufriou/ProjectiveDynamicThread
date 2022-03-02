@@ -47,7 +47,7 @@
 // eigen vectors and matrices
 typedef int IndexType;
 typedef Eigen::Matrix<ScalarType, 3, 3, 0, 3 ,3> EigenMatrix3;
-typedef Eigen::Matrix<ScalarType, 3, 1, 0, 3 ,1> EigenVector3;
+typedef Eigen::Matrix<ScalarType, 3, 1, 0, 3 ,1> EigenVector3; //Rows, Columns 
 typedef Eigen::Matrix<ScalarType, 2, 2, 0, 2 ,2> EigenMatrix2;
 typedef Eigen::Matrix<ScalarType, 2, 1, 0, 2 ,1> EigenVector2;
 typedef Eigen::Matrix<ScalarType, -1, 3, 0, -1 ,3> EigenMatrix3x;

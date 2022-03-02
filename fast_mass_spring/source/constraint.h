@@ -42,17 +42,13 @@
 
 enum {ATTACHMENT, SPRING, TET};
 
-struct CudaConstraint {
-	
-};
-
-
 class Constraint
 {
 public:
 	Constraint(ScalarType *stiffness);
 	Constraint(const Constraint& other);
 	VectorX ConvertCVectorToEigen(double* arr, int length);
+	double* ConvertSparseMatrixToCArray();
 	virtual ~Constraint();
 
 	virtual ScalarType  EvaluatePotentialEnergy(const VectorX& x) {std::cout << "Warning: reach <Constraint::EvaluatePotentialEnergy> base class virtual function." << std::endl; return 0;}

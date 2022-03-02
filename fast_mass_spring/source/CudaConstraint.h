@@ -1,14 +1,11 @@
 #pragma once
+
+// Attachment and Spring constraint
+enum {ATT, SPR};
+
 class CudaConstraint {
-	
-	
-
-	
-
-	double* spring_constraints; 
-	double* attachement_constraints; //Attachment constraints
+public:
 	double* m_RHS; //Right hand matrix
-
 };
 
 class CudaSpringConstraint: public CudaConstraint {
@@ -16,9 +13,9 @@ class CudaSpringConstraint: public CudaConstraint {
 	 ///////  Spring Functions  ///////////
 	// Getting the Constrained Vertex   // 
 	public:
-		CudaSpringConstraint(int index1, int index2, double rest_length);
-	private: 
-		int m_index1, m_index2;
+		CudaSpringConstraint(unsigned int index1, unsigned int index2, double rest_length);
+	protected: 
+		unsigned int m_index1, m_index2;
 		double m_rest_length;
 	public:
 		inline unsigned int GetConstrainedVertexIndex1(void) { return m_index1; }
@@ -26,6 +23,12 @@ class CudaSpringConstraint: public CudaConstraint {
 		inline double GetRestLength(void) { return m_rest_length; }
 };
 
-class CudaAttachmentConstraint {
-
+class CudaAttachmentConstraint: public CudaConstraint {
+public:
+	CudaAttachmentConstraint(double* fixedPoint, unsigned int vertex_index);
+protected:
+	double* m_fixed_point;
+	unsigned int m_vertex_index;
+public:
+	inline double* GetAttachmentFixedPoint() { return m_fixed_point; }
 };

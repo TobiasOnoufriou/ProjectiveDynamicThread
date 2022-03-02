@@ -50,18 +50,17 @@ __global__ void localStep(double * p_spring, double* p_attach, double* p_j, doub
 // h -> defines host
 // d -> defines device
 //Return b 
-void Converge::Converge(double* h_spring, double* h_attach, double* h_pj, double* h_qn1, double* h_b) {
+void Converge::Converge(CudaConstraint* c, double* p_j, double* q_n1, double* p_spring, double* p_attach) {
 
 	double *d_b, *d_pj, *d_qn1, *d_pspring, *d_pattach; //Device memory.
-	//Constraint* d_cj;
-	//spring.data 
+	CudaConstraint* d_cj;
 	//Instead of directly using Eigen use .data and conver it to a float3
 
-	d_b = h_b;
-	d_pj = h_pj;
-	d_qn1 = h_qn1;
-	d_pspring = h_spring;
-	d_pattach = h_attach;
+	//d_b = h_b;
+	//d_pj = h_pj;
+	//d_qn1 = h_qn1;
+	//d_pspring = h_spring;
+	//d_pattach = h_attach;
 
 
 	//cudaMalloc((void**)&d_cj, sizeof(Constraint));
@@ -76,13 +75,13 @@ void Converge::Converge(double* h_spring, double* h_attach, double* h_pj, double
 	
 
 	//cudaMemcpy(d_cj, &cj, sizeof(Constraint), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_b, h_b, sizeof(double*), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pj, h_pj, sizeof(double*), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pspring, h_spring, sizeof(double*), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pattach, h_attach, sizeof(double*), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_qn1, h_qn1, sizeof(double*), cudaMemcpyHostToDevice);
+	//cudaMemcpy(d_b, h_b, sizeof(double*), cudaMemcpyHostToDevice);
+	//cudaMemcpy(d_pj, h_pj, sizeof(double*), cudaMemcpyHostToDevice);
+	//cudaMemcpy(d_pspring, h_spring, sizeof(double*), cudaMemcpyHostToDevice);
+	//cudaMemcpy(d_pattach, h_attach, sizeof(double*), cudaMemcpyHostToDevice);
+	//cudaMemcpy(d_qn1, h_qn1, sizeof(double*), cudaMemcpyHostToDevice);
 
-	localStep<<<1, SIZE >>>(
+	/*localStep<<<1, SIZE >>>(
 		d_pspring,
 		d_pattach, 
 		d_pj, 
@@ -90,7 +89,7 @@ void Converge::Converge(double* h_spring, double* h_attach, double* h_pj, double
 		d_b
 		);
 	
-	cudaDeviceSynchronize();
+	cudaDeviceSynchronize();*/
 }
 	
 

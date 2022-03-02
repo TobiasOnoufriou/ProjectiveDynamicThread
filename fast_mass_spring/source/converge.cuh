@@ -5,19 +5,10 @@
 #include <device_launch_parameters.h>
 #include <cuda.h>
 #include <cusparse.h>
-//#include "Sparse"
-
-//#include "constraint.h"
-//#include <stdio.h>
-//#include "constraint.h"
-
-struct CudaConverge {
-
-};
+#include "CudaConstraint.h"
 
 namespace Converge {
-	void Converge(double* h_spring, double* h_attach, double* h_pj, double* h_qn1, double* h_b); //This will probably need to be amended for parsing in constraints.
-	void CopyMatrixToDevice(const float* matrix, int mRows, int mCols);
+	void Converge(CudaConstraint* c, double* p_j, double* q_n1, double* p_spring, double* p_attach); //This will probably need to be amended for parsing in constraints.
 }
 
 #endif

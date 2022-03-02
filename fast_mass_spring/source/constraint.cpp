@@ -65,6 +65,20 @@ VectorX Constraint::ConvertCVectorToEigen(double* arr, int length){
 	return v;
 }
 
+double* Constraint::ConvertSparseMatrixToCArray() {
+	const int r = m_RHS.rows();
+	const int c = m_RHS.cols();
+	
+	double* _rhs = new double[r+c+1];
+
+	for (int i = 0; i <= r; i++) {
+		for (int j = 0; j <= c; j++) {
+			_rhs[i + j] = m_RHS.coeff(i, j);
+		}
+	}
+
+	return _rhs;
+}
 //----------AttachmentConstraint Class----------//
 AttachmentConstraint::AttachmentConstraint(ScalarType *stiffness) : 
 	Constraint(stiffness)

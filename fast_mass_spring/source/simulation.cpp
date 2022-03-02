@@ -36,6 +36,7 @@
 #include "simulation.h"
 #include "timer_wrapper.h"
 
+
 #include "simpleTimer.h"
 
 
@@ -308,6 +309,7 @@ void Simulation::CreateRHSMatrix()
 {
 	for (int i = 0; i < m_constraints.size(); i++)
 	{
+		CudaConstraint* cc = m_cuda_constraints[i];
 		Constraint* c = m_constraints[i];
 		SparseMatrix A_i;
 		SparseMatrix B_i;
@@ -339,6 +341,8 @@ void Simulation::CreateRHSMatrix()
 		S_i_transpose.applyThisOnTheLeft(A_i);
 		A_i.applyThisOnTheLeft(B_i);
 		c->m_RHS = w_i * B_i;
+		
+		cc->m_RHS = c->ConvertSparseMatrixToCArray();
 	}
 }
 
@@ -374,6 +378,8 @@ void Simulation::Update()
 					
 			VectorX* p_j;
 			Constraint* c_j;
+
+			
 			unsigned int tn;
 			
 			VectorX q_n = m_mesh->m_current_positions;
@@ -382,9 +388,20 @@ void Simulation::Update()
 
 			SparseMatrix coeff = m_mesh->m_mass_matrix / (m_h * m_h);
 			coeff.applyThisOnTheLeft(s_n);
+
 			
+			//Length of Eigen Array should not change size.
+			std::cout << sc->ConvertCVectorToEigen(s_n.data(), s_n.size()).size() << std::endl;
+
+			//Before simulation we'll need to get Spring and Attachment constraint values into an array.
+			
+
+
+			//After completion convert back to their original Eigenvalue
+
+
 			// LOCAL SOLVE STEP
-			for (int i = 0; i < m_iterations_per_frame; i++)
+			/*for (int i = 0; i < m_iterations_per_frame; i++)
 			{
 				simpleTimer localTimer;
 
@@ -463,7 +480,7 @@ void Simulation::Update()
 				}			
 				// GLOBAL SOLVE STEP
 				q_n1 = m_llt.solve(b);
-			}
+			}*/
 			VectorX v_n1 = (q_n1 - q_n)/m_h;
 			m_mesh->m_current_positions = q_n1;
 			m_mesh->m_current_velocities = v_n1;
@@ -607,6 +624,7 @@ void Simulation::UnselectAttachmentConstraint()
 void Simulation::AddAttachmentConstraint(unsigned int vertex_index)
 {
 	AttachmentConstraint* ac = new AttachmentConstraint(&m_stiffness_attachment, vertex_index, m_mesh->m_current_positions.block_vector(vertex_index));
+	CudaAttachmentConstraint* acc = new CudaAttachmentConstraint(m_mesh->m_current_positions.block_vector(vertex_index).data(), vertex_index);
 	m_constraints.push_back(ac);
 	m_mesh->m_expanded_system_dimension+=3;
 	m_mesh->m_expanded_system_dimension_1d+=1;
@@ -693,8 +711,10 @@ void Simulation::clearConstraints()
 	for (unsigned int i = 0; i < m_constraints.size(); ++i)
 	{
 		delete m_constraints[i];
+		delete m_cuda_constraints[i];
 	}
 	m_constraints.clear();
+	m_cuda_constraints.clear();
 }
 
 void Simulation::setupConstraints()
@@ -712,6 +732,7 @@ void Simulation::setupConstraints()
 			pR2 = m_mesh->m_current_positions.block_vector(e->m_v2);
 			SpringConstraint* c = new SpringConstraint(&m_stiffness_stretch, e->m_v1, e->m_v2, (pR1 - pR2).norm());
 			CudaSpringConstraint* cc = new CudaSpringConstraint(e->m_v1, e->m_v2, (pR1 - pR2).norm());
+			m_cuda_constraints.push_back(cc);
 			m_constraints.push_back(c);
 			m_mesh->m_expanded_system_dimension += 6;
 			m_mesh->m_expanded_system_dimension_1d += 2;
