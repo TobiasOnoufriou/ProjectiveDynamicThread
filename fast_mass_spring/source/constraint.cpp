@@ -29,7 +29,9 @@
 
 #include <exception>
 
+
 #include "constraint.h"
+#include "CudaConstraint.h"
 #include "SVD"
 
 //----------Utility Functions---------//
@@ -65,19 +67,14 @@ VectorX Constraint::ConvertCVectorToEigen(double* arr, int length){
 	return v;
 }
 
-double* Constraint::ConvertSparseMatrixToCArray() {
-	const int r = m_RHS.rows();
-	const int c = m_RHS.cols();
-	
-	double* _rhs = new double[r+c+1];
 
-	for (int i = 0; i <= r; i++) {
-		for (int j = 0; j <= c; j++) {
-			_rhs[i + j] = m_RHS.coeff(i, j);
-		}
-	}
+void Constraint::ConvertSparseMatrixToCArray(CudaConstraint* cc) {
+	cc->num_non0 = m_RHS.nonZeros();
+	cc->num_outer = m_RHS.cols() + 1;
 
-	return _rhs;
+	cc->row = m_RHS.outerIndexPtr();
+	cc->col = m_RHS.innerIndexPtr();
+	cc->value = m_RHS.valuePtr();
 }
 //----------AttachmentConstraint Class----------//
 AttachmentConstraint::AttachmentConstraint(ScalarType *stiffness) : 

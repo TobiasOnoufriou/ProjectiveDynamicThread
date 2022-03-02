@@ -5,7 +5,13 @@ enum {ATT, SPR};
 
 class CudaConstraint {
 public:
-	double* m_RHS; //Right hand matrix
+	//double* m_RHS; //Right hand matrix
+	//Sparse Matrix
+	int num_non0;
+	int num_outer;
+
+	int* row, *col;
+	double* value;
 };
 
 class CudaSpringConstraint: public CudaConstraint {

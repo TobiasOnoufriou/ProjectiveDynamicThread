@@ -307,6 +307,8 @@ void Simulation::CreateLHSMatrix()
 ////////////////////////////////////////////////////
 void Simulation::CreateRHSMatrix()
 {
+	std::cout << m_constraints.size() << std::endl;
+	std::cout << m_cuda_constraints.size() << std::endl;
 	for (int i = 0; i < m_constraints.size(); i++)
 	{
 		CudaConstraint* cc = m_cuda_constraints[i];
@@ -341,8 +343,7 @@ void Simulation::CreateRHSMatrix()
 		S_i_transpose.applyThisOnTheLeft(A_i);
 		A_i.applyThisOnTheLeft(B_i);
 		c->m_RHS = w_i * B_i;
-		
-		cc->m_RHS = c->ConvertSparseMatrixToCArray();
+		c->ConvertSparseMatrixToCArray(cc);
 	}
 }
 
@@ -391,7 +392,7 @@ void Simulation::Update()
 
 			
 			//Length of Eigen Array should not change size.
-			std::cout << sc->ConvertCVectorToEigen(s_n.data(), s_n.size()).size() << std::endl;
+			//std::cout << sc->ConvertCVectorToEigen(s_n.data(), s_n.size()).size() << std::endl;
 
 			//Before simulation we'll need to get Spring and Attachment constraint values into an array.
 			
@@ -401,7 +402,7 @@ void Simulation::Update()
 
 
 			// LOCAL SOLVE STEP
-			/*for (int i = 0; i < m_iterations_per_frame; i++)
+			for (int i = 0; i < m_iterations_per_frame; i++)
 			{
 				simpleTimer localTimer;
 
@@ -480,7 +481,7 @@ void Simulation::Update()
 				}			
 				// GLOBAL SOLVE STEP
 				q_n1 = m_llt.solve(b);
-			}*/
+			}
 			VectorX v_n1 = (q_n1 - q_n)/m_h;
 			m_mesh->m_current_positions = q_n1;
 			m_mesh->m_current_velocities = v_n1;
@@ -626,6 +627,7 @@ void Simulation::AddAttachmentConstraint(unsigned int vertex_index)
 	AttachmentConstraint* ac = new AttachmentConstraint(&m_stiffness_attachment, vertex_index, m_mesh->m_current_positions.block_vector(vertex_index));
 	CudaAttachmentConstraint* acc = new CudaAttachmentConstraint(m_mesh->m_current_positions.block_vector(vertex_index).data(), vertex_index);
 	m_constraints.push_back(ac);
+	m_cuda_constraints.push_back(acc);
 	m_mesh->m_expanded_system_dimension+=3;
 	m_mesh->m_expanded_system_dimension_1d+=1;
 	CreateLHSMatrix();
@@ -744,7 +746,9 @@ void Simulation::setupConstraints()
 			pR1 = m_mesh->m_current_positions.block_vector(e->m_v1);
 			pR2 = m_mesh->m_current_positions.block_vector(e->m_v2);
 			SpringConstraint* c = new SpringConstraint(&m_stiffness_bending, e->m_v1, e->m_v2, (pR1 - pR2).norm());
+			CudaSpringConstraint* cc = new CudaSpringConstraint(e->m_v1, e->m_v2, (pR1 - pR2).norm());
 			m_constraints.push_back(c);
+			m_cuda_constraints.push_back(cc);
 			m_mesh->m_expanded_system_dimension += 6;
 			m_mesh->m_expanded_system_dimension_1d += 2;
 		}

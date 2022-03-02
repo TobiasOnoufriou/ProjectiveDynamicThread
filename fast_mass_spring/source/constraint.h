@@ -34,6 +34,8 @@
 #include <iostream>
 #include <fstream>
 
+
+#include "CudaConstraint.h"
 #include "math_headers.h"
 #include "global_headers.h"
 #include "opengl_headers.h"
@@ -48,7 +50,7 @@ public:
 	Constraint(ScalarType *stiffness);
 	Constraint(const Constraint& other);
 	VectorX ConvertCVectorToEigen(double* arr, int length);
-	double* ConvertSparseMatrixToCArray();
+	void ConvertSparseMatrixToCArray(CudaConstraint* cc);
 	virtual ~Constraint();
 
 	virtual ScalarType  EvaluatePotentialEnergy(const VectorX& x) {std::cout << "Warning: reach <Constraint::EvaluatePotentialEnergy> base class virtual function." << std::endl; return 0;}
