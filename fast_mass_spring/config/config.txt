@@ -14,7 +14,7 @@ TetScaling          1
 TetFlip             0
 ClothDimension      21 21
 ClothCorners        -5 8 -5 5 -1.85 -3.26
-RopeLength			100
+RopeLength			200
 RopeStart			5 5 5 
 
 SimMethod           1

@@ -136,6 +136,7 @@
     <None Include="shaders\vert.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\CudaConstraint.cpp" />
     <ClCompile Include="source\anttweakbar_wrapper.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\constraint.cpp" />
@@ -153,7 +154,7 @@
     <ClCompile Include="source\stb_image_write.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CudaConstraint.h" />
+    <ClInclude Include="source\CudaConstraint.h" />
     <ClInclude Include="source\converge.cuh" />
     <ClInclude Include="source\anttweakbar_wrapper.h" />
     <ClInclude Include="source\camera.h" />

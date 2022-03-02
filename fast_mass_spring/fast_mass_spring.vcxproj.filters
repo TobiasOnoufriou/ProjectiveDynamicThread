@@ -123,6 +123,9 @@
     <ClCompile Include="source\simpleTimer.cpp">
       <Filter>Source Files\simulation\simulation</Filter>
     </ClCompile>
+    <ClCompile Include="source\CudaConstraint.cpp">
+      <Filter>Source Files\simulation\simulation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\clock.h">
@@ -185,7 +188,7 @@
     <ClInclude Include="source\converge.cuh">
       <Filter>Source Files\simulation\simulation</Filter>
     </ClInclude>
-    <ClInclude Include="CudaConstraint.h">
+    <ClInclude Include="source\CudaConstraint.h">
       <Filter>Source Files\simulation\simulation</Filter>
     </ClInclude>
   </ItemGroup>
