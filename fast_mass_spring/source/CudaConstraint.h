@@ -34,7 +34,7 @@ class CudaSpringConstraint: public CudaConstraint {
 class CudaAttachmentConstraint: public CudaConstraint {
 public:
 	CudaAttachmentConstraint(double* fixedPoint, unsigned int vertex_index);
-protected:
+public:
 	double* m_fixed_point;
 	unsigned int m_vertex_index;
 public:

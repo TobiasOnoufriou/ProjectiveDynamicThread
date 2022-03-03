@@ -25,16 +25,21 @@ __device__ double norm(float3 a) {
 }
 
 __device__ float3 normalise(float3 a){
+	float3 out;
+	float s = sqrt((a.x * a.x) + (a.y * a.y) + (a.z * a.z));
+	out = make_float3(a.x / s, a.y / s, a.z / s);
+	return out;
 }
 
-__global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_attach, double* p_j, double* q_n1, double* b ) {
+__global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_attach, double* q_n1, double* b ) {
 	CudaConstraint* cj;
 	CudaSpringConstraint* scj;
+	CudaAttachmentConstraint* acj;
+	
+	float3* pj;
+	
 	double current_strecth; 
 	float3 current_vector;
-	//int cSize = sizeof m_constraint / sizeof * m_constraint;
-	int idx = threadIdx.x;
-	int idy = threadIdx.y;
 
 	//Parse in the constraint
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -47,44 +52,33 @@ __global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_atta
 	if (index < sizeof(d_cj)) {
 		cj = &d_cj[index];
 
-		
 		if (cj->constraint == SPR) {
 			scj = (CudaSpringConstraint*)cj;
-			float3 V1 = make_float3(q_n1[scj->m_index1 * 0], q_n1[scj->m_index1 * 1], q_n1[scj->m_index1 * 2]);
-			float3 V2 = make_float3(q_n1[scj->m_index2 * 0], q_n1[scj->m_index2 * 1], q_n1[scj->m_index2 * 2]);
+			float3 V1 = make_float3(q_n1[scj->m_index1 * 1], q_n1[scj->m_index1 * 2], q_n1[scj->m_index1 * 3]);
+			float3 V2 = make_float3(q_n1[scj->m_index2 * 1], q_n1[scj->m_index2 * 2], q_n1[scj->m_index2 * 3]);
 			current_vector = V1 - V2;
 			current_strecth = norm(current_vector) - scj->m_rest_length;
 			current_vector = (current_strecth / 2.0) * normalise(current_vector);
+			
+			float3 tPj[2];
+			tPj[0] = V1 - current_vector;
+			tPj[1] = V2 - current_vector;
+
+			pj = tPj;
 		}
 
 		else if (cj->constraint == ATT) {
+			acj = (CudaAttachmentConstraint*)cj;
 
+			float3 tPj;
+			tPj = make_float3(acj->m_fixed_point[0], acj->m_fixed_point[1], acj->m_fixed_point[2]);
 		}
 
+		//TODO: Add sparse matrix applying from left. Which seems just to multiply on the right e.g m_RHS * p_j
+		//TODO: Matrix multiplication with b to be returned and sovled.
 	}
 	
 	__syncthreads();
-
-	/*for (int i = index; i < cSize; i += stride) {
-		cj = &m_constraint[i]; //This will become a cuda_constraint.
-		if (cj->constraintType == SPRING) { //Compare using the dynamic cast.
-			// Work out spring constraint.
-			SpringConstraint* sc = (SpringConstraint*) cj;
-			current_vector = q_n1->block_vector(sc->GetConstrainedVertexIndex1()) - q_n1->block_vector(sc->GetConstrainedVertexIndex2());
-			current_strecth = current_vector.norm() - sc->GetRestLength();
-			current_vector = (current_strecth / 2.0) * current_vector.normalized();
-
-			p_j = p_spring;
-			p_j->block_vector(0) = q_n1->block_vector(sc->GetConstrainedVertexIndex1()) - current_vector;
-			p_j->block_vector(1) = q_n1->block_vector(sc->GetConstrainedVertexIndex2()) + current_vector;
-		}
-		//
-		if (cj->constraintType == ATTACHMENT) {
-			// Work out attachment constraint.
-		}
-		//cj->m_RHS.applyThisOnTheLeft(*p_j);
-		*b += *p_j;
-	}*/
 }
 
 // h -> defines host
@@ -94,6 +88,8 @@ void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* 
 	double *d_b, *d_pj, *d_qn1, *d_pspring, *d_pattach; //Device memory.
 	CudaConstraint* d_cj;
 	//Instead of directly using Eigen use .data and conver it to a float3
+
+	cusparseMatDescr_t Adescr = 0;
 
 	
 
