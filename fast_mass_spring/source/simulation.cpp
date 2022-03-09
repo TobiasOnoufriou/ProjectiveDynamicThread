@@ -307,8 +307,8 @@ void Simulation::CreateLHSMatrix()
 ////////////////////////////////////////////////////
 void Simulation::CreateRHSMatrix()
 {
-	std::cout << m_constraints.size() << std::endl;
-	std::cout << m_cuda_constraints.size() << std::endl;
+	//std::cout << m_constraints.size() << std::endl;
+	//std::cout << m_cuda_constraints.size() << std::endl;
 	for (int i = 0; i < m_constraints.size(); i++)
 	{
 		CudaConstraint* cc = m_cuda_constraints[i];
@@ -343,8 +343,14 @@ void Simulation::CreateRHSMatrix()
 		S_i_transpose.applyThisOnTheLeft(A_i);
 		A_i.applyThisOnTheLeft(B_i);
 		c->m_RHS = w_i * B_i;
-		c->ConvertSparseMatrixToCArray(cc);
-		std::cout << c->m_RHS.valuePtr() << std::cout;
+		
+		cc->value = VectorX(c->m_RHS).data(); //Convert the calculated sparse matrix to dense matrix
+											  // This can be used to convert back to sparse when calculation completes
+		cc->row = VectorX(c->m_RHS).rows();
+		cc->col = VectorX(c->m_RHS).cols();
+
+		// Call conversion to sparse 
+		//c->ConvertSparseMatrixToCArray(*cc);
 	}	
 }
 
@@ -408,6 +414,8 @@ void Simulation::Update()
 
 				VectorX b = s_n;
 
+				int rows = 0;
+
 				EigenVector3 current_vector;
 				ScalarType current_stretch;
 				int constraintType;
@@ -437,11 +445,11 @@ void Simulation::Update()
 									current_stretch = current_vector.norm() - sc->GetRestLength();
 									current_vector = (current_stretch / 2.0) * current_vector.normalized();
 									
-									p_j = &p_spring;
-									p_j->resize(6);
-									
+									p_j = &p_spring; //Assign all the vectors from p_spring
+									p_j->resize(6); //Resizes
+									rows = 6;
 									p_j->block_vector(0) = q_n1.block_vector(sc->GetConstrainedVertexIndex1()) - current_vector;
-									p_j->block_vector(1) = q_n1.block_vector(sc->GetConstrainedVertexIndex2()) + current_vector;
+									p_j->block_vector(1) = q_n1.block_vector(sc->GetConstrainedVertexIndex2()) + current_vector;								
 								}
 
 								else if (constraintType == ATTACHMENT) // is attachment constraint
@@ -451,6 +459,7 @@ void Simulation::Update()
 									p_j->resize(3);
 									
 									p_j->block_vector(0) = ac->GetFixedPoint();
+									rows = 3;
 								}
 
 								else if (constraintType == TET) // is tetrahedral constraint
@@ -477,9 +486,11 @@ void Simulation::Update()
 									p_j->block_vector( 2 ) = tet_verts_new.block_vector( 2 );
 									p_j->block_vector( 3 ) = tet_verts_new.block_vector( 3 );
 								}
-								c_j->m_RHS.applyThisOnTheLeft(*p_j);
-								b += *p_j;
 								
+								Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows);
+								c_j->m_RHS.applyThisOnTheLeft(*p_j);
+								
+								b += *p_j;
 							}
 						}
 					}

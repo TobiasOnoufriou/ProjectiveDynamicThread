@@ -10,8 +10,8 @@ public:
 	int num_non0;
 	int num_outer;
 
-	int* row, *col;
-	double* value;
+	int row, col;
+	double* value; //Matrix
 
 	int constraint;
 };

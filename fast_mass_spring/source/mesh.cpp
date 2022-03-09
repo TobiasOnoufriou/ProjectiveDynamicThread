@@ -92,7 +92,6 @@ void Mesh::DrawLine(const VBO& vbos, int line_width) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 }
 
 void Mesh::Draw(const VBO& vbos, int show_texture)
@@ -742,7 +741,7 @@ void RopeMesh::generateParticleList() {
 	// Assign initial position to all the vertices.
 	m_current_positions.setZero();
 	//Assigning the positions of each points.
-	unsigned int i, k, index;
+	unsigned int i, index;
 	for (i = 0; i < m_joints; ++i)
 	{
 		index = m_joints * i;

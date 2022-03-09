@@ -68,13 +68,13 @@ VectorX Constraint::ConvertCVectorToEigen(double* arr, int length){
 }
 
 
-void Constraint::ConvertSparseMatrixToCArray(CudaConstraint* cc) {
-	cc->num_non0 = m_RHS.nonZeros();
-	cc->num_outer = m_RHS.cols() + 1;
+void Constraint::ConvertSparseMatrixToCArray(CudaConstraint& cc) {
+	cc.num_non0 = m_RHS.nonZeros();
+	cc.num_outer = m_RHS.cols() + 1;
 
-	cc->row = m_RHS.outerIndexPtr();
-	cc->col = m_RHS.innerIndexPtr();
-	cc->value = m_RHS.valuePtr();
+	//cc.row = m_RHS.outerIndexPtr();
+	//cc.col = m_RHS.innerIndexPtr();
+	cc.value = m_RHS.valuePtr();
 }
 //----------AttachmentConstraint Class----------//
 AttachmentConstraint::AttachmentConstraint(ScalarType *stiffness) : 
