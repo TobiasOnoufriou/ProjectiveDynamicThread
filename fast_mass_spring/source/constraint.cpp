@@ -57,12 +57,12 @@ Constraint::~Constraint()
 {
 }
 
-VectorX Constraint::ConvertCVectorToEigen(double* arr, int length){
+VectorX Constraint::ConvertCVectorToEigen(double* arr){
 	typedef Eigen::Map<VectorX> MapType;
 	typedef Eigen::Map<const VectorX> MapTypeConst;
 	VectorX v;
 
-	v = MapType(arr, length, 1);
+	v = MapType(arr, sizeof(arr)/sizeof(arr[0]), 1);
 
 	return v;
 }

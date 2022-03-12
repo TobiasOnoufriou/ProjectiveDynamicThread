@@ -1,5 +1,6 @@
 #include "converge.cuh"
 
+
 #define SIZE 1024
 
 /*__device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> p_spring;
@@ -7,6 +8,8 @@ __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> p_attach;
 __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1>* p_j; //May need to be put into the jacobiOnDevice function
 __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> q_n1;*/
 
+
+__device__ double* d_product;
 
 /*__device__ double3 operator-(const double3& a, const double3& b) {
 	return make_double3(a.x - b.x, a.y - b.y, a.z - b.z);
@@ -110,7 +113,9 @@ __global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_atta
 }*/
 
 //Attempt at adding this first before adding it to the bigger system.
-__global__ void sparseMatrixVectorMultiplication(CudaConstraint* d_cj, double* p_j, double* d_product ,int nRows) {
+/*sparseMatrixVectorMultiplication should multithred solving matrix multiplication of a sparse matrix and
+a vector.*/
+__global__ void sparseMatrixVectorMultiplication(CudaConstraint* d_cj, double* p_j, int nRows) {
 	int i = blockDim.y * blockIdx.y + threadIdx.y;
 	int j = blockDim.x * blockIdx.x + threadIdx.x;
 	double product_val = 0;
@@ -120,8 +125,9 @@ __global__ void sparseMatrixVectorMultiplication(CudaConstraint* d_cj, double* p
 		product_val += d_cj->value[k * d_cj->row + j] * p_j[i * d_cj->row + k];
 	}
 	d_product[i * nRows + j] = product_val;
-	
 }
+
+
 // h -> defines host
 // d -> defines device
 void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* h_qn1, double* h_pspring, double* h_pattach) {
@@ -167,34 +173,35 @@ void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* 
 	cudaDeviceSynchronize();
 }
 
-
-void Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, double size) {
+/*MatrixMulTest function that handles memory management to the sparseMatrixVectorMultiplication kernel function and will return the product calculated.*/
+double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, double size) {
 	CudaConstraint* d_cj;
-	double* d_pj, * d_product;
+	double* d_pj, *d_product;
 
-	double* h_product = (double*)malloc(a->row * size);
+	double* h_product;// = (double*)malloc(a->row * size);
 	dim3 grid(1, 1), block(a->row, 1);
 
-	cudaMalloc((void**)&d_cj, sizeof(CudaConstraint));
+	cudaMalloc((void**)&d_cj, sizeof(CudaConstraint*));
 
 	cudaMalloc((void**)&d_pj, size * sizeof(double));
-	cudaMalloc((void**)&d_product, (a->row * size) * sizeof(double));
+	//cudaMalloc((void**)&d_product, (a->row * size) * sizeof(double));
 
-	cudaMemcpy(d_cj, &a, sizeof(CudaConstraint), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_pj, &h_pj, size * sizeof(double), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_product, &h_product, (a->row * size) * sizeof(double), cudaMemcpyHostToDevice);
+	cudaMemcpy(&a, d_cj, sizeof(CudaConstraint*), cudaMemcpyHostToDevice);
+	cudaMemcpy(&h_pj, d_pj, size * sizeof(double), cudaMemcpyHostToDevice);
+	//cudaMemcpy(&h_product, d_product, (a->row * size) * sizeof(double), cudaMemcpyHostToDevice);
 
+	sparseMatrixVectorMultiplication<<<grid, block>>>(d_cj, d_pj, size);
+	cudaDeviceSynchronize();
 
-	
-
-	sparseMatrixVectorMultiplication << <grid, block >> > (d_cj, d_pj, d_product, size);
-
-	cudaMemcpy(h_product, d_product, (a->row * size) * sizeof(double), cudaMemcpyDeviceToHost);
-	//std::cout << a->row << std::endl;
+	//cudaMemcpyFromSymbol(&product, d_product, sizeof(product), 0, cudaMemcpyDeviceToHost);
+	cudaMemcpy(&d_product, h_product, (a->row * size)*sizeof(double), cudaMemcpyDeviceToHost);
+	//std::cout << sizeof(h_product)/sizeof(h_product[0]) << std::endl;
 
 	cudaFree(d_cj);
 	cudaFree(d_pj);
 	cudaFree(d_product);
+	
+	return h_product;
 }
 	
 void Converge::ConvertDenseToCuSparse(CudaConstraint* h_cj) {

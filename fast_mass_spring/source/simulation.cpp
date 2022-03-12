@@ -487,8 +487,9 @@ void Simulation::Update()
 									p_j->block_vector( 3 ) = tet_verts_new.block_vector( 3 );
 								}
 								
-								Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows);
-								c_j->m_RHS.applyThisOnTheLeft(*p_j);
+								p_j = &c_j->ConvertCVectorToEigen(Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows));
+								//c_j->m_RHS.applyThisOnTheLeft(*p_j);
+								std::cout << p_j->size() << std::endl;
 								
 								b += *p_j;
 							}

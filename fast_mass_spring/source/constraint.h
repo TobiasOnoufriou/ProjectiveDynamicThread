@@ -49,7 +49,7 @@ class Constraint
 public:
 	Constraint(ScalarType *stiffness);
 	Constraint(const Constraint& other);
-	VectorX ConvertCVectorToEigen(double* arr, int length);
+	VectorX ConvertCVectorToEigen(double* arr);
 	void ConvertSparseMatrixToCArray(CudaConstraint& cc);
 	void ConvertCArrayToSparseMatrix(CudaConstraint cc);
 	virtual ~Constraint();
