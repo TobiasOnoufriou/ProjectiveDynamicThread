@@ -4,8 +4,8 @@ MeshBody            1
 Wireframe           0
 Wireframe           1
 Texture             0
-ScreenWidth         1920
-ScreenHeight        1009
+ScreenWidth         1512
+ScreenHeight        881
 
 MeshType            2
 MeshMass            1
@@ -18,13 +18,13 @@ RopeLength			200
 RopeStart			5 5 5 
 
 SimMethod           1
-Timestep            0.0442
+Timestep            0.0333
 QuasiStatics        0
 Subspace            1
-AttachmentStiffness 758
-StretchStiffness    600
-BendingStiffness    264
-GravityConstant     9.8
+AttachmentStiffness 120
+StretchStiffness    80
+BendingStiffness    20
+GravityConstant     100
 DampingCoefficient  0.001
 IterationsPerFrame  1
 LSEnable            1

@@ -49,9 +49,9 @@ class Constraint
 public:
 	Constraint(ScalarType *stiffness);
 	Constraint(const Constraint& other);
-	VectorX ConvertCVectorToEigen(double* arr);
-	void ConvertSparseMatrixToCArray(CudaConstraint& cc);
-	void ConvertCArrayToSparseMatrix(CudaConstraint cc);
+	VectorX ConvertCVectorToEigen(double* arr, unsigned int size);
+	void ConvertSparseMatrixToCArray(CudaConstraint& cc, SparseMatrix s);
+	//void ConvertCArrayToSparseMatrix(CudaConstraint& cc, SparseMatrix s);
 	virtual ~Constraint();
 
 	virtual ScalarType  EvaluatePotentialEnergy(const VectorX& x) {std::cout << "Warning: reach <Constraint::EvaluatePotentialEnergy> base class virtual function." << std::endl; return 0;}

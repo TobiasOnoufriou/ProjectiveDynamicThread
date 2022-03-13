@@ -343,11 +343,13 @@ void Simulation::CreateRHSMatrix()
 		S_i_transpose.applyThisOnTheLeft(A_i);
 		A_i.applyThisOnTheLeft(B_i);
 		c->m_RHS = w_i * B_i;
-		
-		cc->value = VectorX(c->m_RHS).data(); //Convert the calculated sparse matrix to dense matrix
-											  // This can be used to convert back to sparse when calculation completes
-		cc->row = VectorX(c->m_RHS).rows();
-		cc->col = VectorX(c->m_RHS).cols();
+		// TODO: Create to convert m_RHS to array.
+		cc->row = c->m_RHS.rows();
+		cc->col = c->m_RHS.cols();
+
+		c->ConvertSparseMatrixToCArray(*cc, c->m_RHS);		   //Convert the calculated sparse matrix to dense matrix
+											  //This can be used to convert back to sparse when calculation completes
+	
 
 		// Call conversion to sparse 
 		//c->ConvertSparseMatrixToCArray(*cc);
@@ -449,7 +451,7 @@ void Simulation::Update()
 									p_j->resize(6); //Resizes
 									rows = 6;
 									p_j->block_vector(0) = q_n1.block_vector(sc->GetConstrainedVertexIndex1()) - current_vector;
-									p_j->block_vector(1) = q_n1.block_vector(sc->GetConstrainedVertexIndex2()) + current_vector;								
+									p_j->block_vector(1) = q_n1.block_vector(sc->GetConstrainedVertexIndex2()) + current_vector;		
 								}
 
 								else if (constraintType == ATTACHMENT) // is attachment constraint
@@ -486,11 +488,21 @@ void Simulation::Update()
 									p_j->block_vector( 2 ) = tet_verts_new.block_vector( 2 );
 									p_j->block_vector( 3 ) = tet_verts_new.block_vector( 3 );
 								}
+								if (constraintType == ATTACHMENT) {
+									//std::cout << m_cuda_constraints[tn]->row << std::endl;
+									//std::cout << c_j->m_RHS.cols() << std::endl;
+									//std::cout << c_j->m_RHS.rows() << std::endl;
+									//std::cout << c_j->m_RHS.outerSize() << std::endl;
+									//std::cout << c_j->m_RHS.innerSize() << std::endl;
+									
+								}
+								p_j = &c_j->ConvertCVectorToEigen(Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows), (m_cuda_constraints[tn]->row));
 								
-								p_j = &c_j->ConvertCVectorToEigen(Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows));
 								//c_j->m_RHS.applyThisOnTheLeft(*p_j);
-								std::cout << p_j->size() << std::endl;
-								
+
+								//std::cout << p_j->rows() << std::endl;
+								//std::cout << p_j->isApprox(*pp_j) << std::endl;
+
 								b += *p_j;
 							}
 						}

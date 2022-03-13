@@ -1,7 +1,25 @@
 #include "converge.cuh"
 
 
+#include <stdio.h>
+#include <conio.h>
+#include <new>
+#include <cmath>
+
 #define SIZE 1024
+//ERROR CHECKER CURTOSY OF: https://stackoverflow.com/questions/42180066/cudamemcpy-struct-device-to-host-not-working
+#define ERRCHECK(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort = true, bool wait = true)
+{
+	if (code != cudaSuccess)
+	{
+		fprintf(stderr, "GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+		if (wait) getch();
+		if (abort) exit(code);
+	}
+}
+
+
 
 /*__device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> p_spring;
 __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> p_attach;
@@ -9,7 +27,7 @@ __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1>* p_j; //May need to be p
 __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> q_n1;*/
 
 
-__device__ double* d_product;
+//__device__ __shared__ double* d_product;
 
 /*__device__ double3 operator-(const double3& a, const double3& b) {
 	return make_double3(a.x - b.x, a.y - b.y, a.z - b.z);
@@ -115,16 +133,20 @@ __global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_atta
 //Attempt at adding this first before adding it to the bigger system.
 /*sparseMatrixVectorMultiplication should multithred solving matrix multiplication of a sparse matrix and
 a vector.*/
-__global__ void sparseMatrixVectorMultiplication(CudaConstraint* d_cj, double* p_j, int nRows) {
-	int i = blockDim.y * blockIdx.y + threadIdx.y;
-	int j = blockDim.x * blockIdx.x + threadIdx.x;
-	double product_val = 0;
-	//m_A(Row) x m_B(column) gives matrix product size
+__global__ void sparseMatrixVectorMultiplication(double* d_cj, double* p_j, double* d_product, int vRows, int aRow) {
+	int row = blockIdx.y * blockDim.y + threadIdx.y;
+	int col = blockIdx.x * blockDim.x + threadIdx.x;
+	//int tid = threadIdx.x + blockIdx.x * blockDim.x;
+	double product_val = 0.0;
+	//m_A(Row) x m_B(column) gives matrix product size matrix.
 	//VECTOR rows same size as MATRIX columns
-	for (int k = 0; k < nRows; k++){
-		product_val += d_cj->value[k * d_cj->row + j] * p_j[i * d_cj->row + k];
-	}
-	d_product[i * nRows + j] = product_val;
+	
+		for (int k = 0; k < vRows; k++) {
+			product_val += p_j[row*vRows] * d_cj[(k* vRows)+col] ;
+		}
+		d_product[row*vRows+col] = product_val;
+		__syncthreads();
+	
 }
 
 
@@ -174,36 +196,40 @@ void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* 
 }
 
 /*MatrixMulTest function that handles memory management to the sparseMatrixVectorMultiplication kernel function and will return the product calculated.*/
-double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, double size) {
-	CudaConstraint* d_cj;
+double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, int size) {
+	double* d_cj;
 	double* d_pj, *d_product;
+	//std::cout << a->row << std::endl;
+	//std::cout << size << std::endl;
 
-	double* h_product;// = (double*)malloc(a->row * size);
-	dim3 grid(1, 1), block(a->row, 1);
+	double* h_product = (double*)malloc((a->row)*sizeof(double));
+	
+	int n = a->row * a->col;
+	//dim3 grid(1, 1), block(a->row, 1);
 
-	cudaMalloc((void**)&d_cj, sizeof(CudaConstraint*));
-
-	cudaMalloc((void**)&d_pj, size * sizeof(double));
+	ERRCHECK(cudaMalloc((void**)&d_cj, n * sizeof(double)));
+	ERRCHECK(cudaMalloc((void**)&d_product, (a->row) * sizeof(double)));
+	ERRCHECK(cudaMalloc((void**)&d_pj, size * sizeof(double)));
 	//cudaMalloc((void**)&d_product, (a->row * size) * sizeof(double));
-
-	cudaMemcpy(&a, d_cj, sizeof(CudaConstraint*), cudaMemcpyHostToDevice);
-	cudaMemcpy(&h_pj, d_pj, size * sizeof(double), cudaMemcpyHostToDevice);
-	//cudaMemcpy(&h_product, d_product, (a->row * size) * sizeof(double), cudaMemcpyHostToDevice);
-
-	sparseMatrixVectorMultiplication<<<grid, block>>>(d_cj, d_pj, size);
-	cudaDeviceSynchronize();
+	double* v = a->value;
+	ERRCHECK(cudaMemcpy(d_cj,v, n*sizeof(double), cudaMemcpyHostToDevice));
+	ERRCHECK(cudaMemcpy(d_pj, h_pj, size * sizeof(double), cudaMemcpyHostToDevice));
+	ERRCHECK(cudaMemcpy(d_product, h_product, (a->row) * sizeof(double), cudaMemcpyHostToDevice));
+	dim3 grid(a->row, a->col);
+	sparseMatrixVectorMultiplication<<<grid,1>>>(d_cj, d_pj, d_product, size, a->row);
+	ERRCHECK(cudaPeekAtLastError());
+	ERRCHECK(cudaDeviceSynchronize());
 
 	//cudaMemcpyFromSymbol(&product, d_product, sizeof(product), 0, cudaMemcpyDeviceToHost);
-	cudaMemcpy(&d_product, h_product, (a->row * size)*sizeof(double), cudaMemcpyDeviceToHost);
-	//std::cout << sizeof(h_product)/sizeof(h_product[0]) << std::endl;
+	ERRCHECK(cudaMemcpy(h_product, d_product, (a->row)*sizeof(double), cudaMemcpyDeviceToHost));
 
-	cudaFree(d_cj);
-	cudaFree(d_pj);
-	cudaFree(d_product);
+	ERRCHECK(cudaFree(d_cj));
+	ERRCHECK(cudaFree(d_pj));
+	ERRCHECK(cudaFree(d_product));
 	
 	return h_product;
 }
-	
+
 void Converge::ConvertDenseToCuSparse(CudaConstraint* h_cj) {
 }
 //Will need a function that will convert position and velocity to float3
