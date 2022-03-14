@@ -142,7 +142,7 @@ __global__ void sparseMatrixVectorMultiplication(double* d_cj, double* p_j, doub
 	//VECTOR rows same size as MATRIX columns
 	
 		for (int k = 0; k < vRows; k++) {
-			product_val += p_j[row*vRows] * d_cj[(k* vRows)+col] ;
+			product_val += d_cj[(k*vRows)+col] * p_j[k];
 		}
 		d_product[row*vRows+col] = product_val;
 		__syncthreads();
@@ -195,7 +195,7 @@ void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* 
 	cudaDeviceSynchronize();
 }
 
-/*MatrixMulTest function that handles memory management to the sparseMatrixVectorMultiplication kernel function and will return the product calculated.*/
+/* MatrixMulTest function that handles memory management to the sparseMatrixVectorMultiplication kernel function and will return the product calculated.*/
 double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, int size) {
 	double* d_cj;
 	double* d_pj, *d_product;
@@ -226,7 +226,7 @@ double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, int size) {
 	ERRCHECK(cudaFree(d_cj));
 	ERRCHECK(cudaFree(d_pj));
 	ERRCHECK(cudaFree(d_product));
-	
+	//h_product will definetly cause a memory leak.
 	return h_product;
 }
 
