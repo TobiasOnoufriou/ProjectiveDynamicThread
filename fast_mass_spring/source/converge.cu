@@ -29,7 +29,15 @@ __device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> q_n1;*/
 
 //__device__ __shared__ double* d_product;
 
-/*__device__ double3 operator-(const double3& a, const double3& b) {
+__device__ double3 make_double3(double x, double y, double z) {
+	double3 out;
+	out.x = x;
+	out.y = y;
+	out.z = z;
+	return out;
+}
+
+__device__ double3 operator-(const double3& a, const double3& b) {
 	return make_double3(a.x - b.x, a.y - b.y, a.z - b.z);
 }
 
