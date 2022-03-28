@@ -11,7 +11,7 @@ public:
 
 	// methods
 	void start( void );
-	void stop( std::string some_desriptor );
+	__int64 stop( std::string some_desriptor );
 	
 private:
 	// method
