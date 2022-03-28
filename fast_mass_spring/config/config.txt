@@ -4,8 +4,8 @@ MeshBody            1
 Wireframe           0
 Wireframe           1
 Texture             0
-ScreenWidth         2560
-ScreenHeight        1377
+ScreenWidth         1512
+ScreenHeight        881
 
 MeshType            2
 MeshMass            1
@@ -14,19 +14,19 @@ TetScaling          1
 TetFlip             0
 ClothDimension      21 21
 ClothCorners        -5 8 -5 5 -1.85 -3.26
-RopeLength			100
+RopeLength			200
 RopeStart			5 5 5 
 
 SimMethod           1
 Timestep            0.0333
 QuasiStatics        0
 Subspace            1
-AttachmentStiffness 758
-StretchStiffness    0
-BendingStiffness    264
-GravityConstant     9.8
+AttachmentStiffness 120
+StretchStiffness    80
+BendingStiffness    20
+GravityConstant     100
 DampingCoefficient  0.001
-IterationsPerFrame  5
+IterationsPerFrame  1
 LSEnable            1
 LSStep              1
 LSAlpha             0.25

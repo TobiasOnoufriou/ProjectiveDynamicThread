@@ -29,7 +29,9 @@
 
 #include <exception>
 
+
 #include "constraint.h"
+#include "CudaConstraint.h"
 #include "SVD"
 
 //----------Utility Functions---------//
@@ -55,6 +57,36 @@ Constraint::~Constraint()
 {
 }
 
+VectorX Constraint::ConvertCVectorToEigen(double* arr, unsigned int size){
+	typedef Eigen::Map<VectorX> MapType;
+	typedef Eigen::Map<const VectorX> MapTypeConst;
+	VectorX v;
+
+	v = MapType(arr, size, 1);
+
+	return v;
+}
+
+
+void Constraint::ConvertSparseMatrixToCArray(CudaConstraint& cc, SparseMatrix s) {
+	/*cc.num_non0 = m_RHS.nonZeros();
+	cc.num_outer = m_RHS.cols() + 1;
+
+	//cc.row = m_RHS.outerIndexPtr();
+	//cc.col = m_RHS.innerIndexPtr();
+	cc.value = m_RHS.valuePtr();*/
+	
+	cc.value = (double*)malloc(cc.row * cc.col);
+	Eigen::MatrixXd mat;
+
+	mat = Eigen::MatrixXd(s);
+
+	cc.value = mat.transpose().data();
+}
+
+/*void Constraint::ConvertSparseMatrixToCArray(CudaConstraint& cc, SparseMatrix s) {
+	
+}*/
 //----------AttachmentConstraint Class----------//
 AttachmentConstraint::AttachmentConstraint(ScalarType *stiffness) : 
 	Constraint(stiffness)
