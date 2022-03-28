@@ -18,16 +18,7 @@ inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort =
 		if (abort) exit(code);
 	}
 }
-
-
-
-/*__device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> p_spring;
-__device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> p_attach;
-__device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1>* p_j; //May need to be put into the jacobiOnDevice function
-__device__ Eigen::Matrix<ScalarType, Eigen::Dynamic, 1> q_n1;*/
-
-
-//__device__ __shared__ double* d_product;
+///// ABOVE CODE CREDITED TO: https://stackoverflow.com/questions/42180066/cudamemcpy-struct-device-to-host-not-working //// 
 
 __device__ double3 make_double3(double x, double y, double z) {
 	double3 out;
@@ -79,6 +70,7 @@ __device__ void ajoinVectorArray(double* a, double* b, double* c) {
 	}
 }
 
+// localStep is a kernel function that will check each constraint in parrellel then perform convergence to be parsed back to the device.
 __global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_attach, double* q_n1, double* b ) {
 	CudaConstraint* cj;
 	CudaSpringConstraint* scj;
@@ -128,23 +120,18 @@ __global__ void localStep(CudaConstraint* d_cj, double* p_spring, double* p_atta
 		//TODO: Matrix multiplication with b to be returned and sovled.
 
 
-
-		double* d_product = (double*)malloc(nRows * d_cj.col);
 		//Workout p_j's new value 
-		//sparseMatrixVectorMultiplication << 1, SIZE >> (cj, pj, d_product, rows);
-
+		//sparseMatrixVectorMultiplication << 1, SIZE >> (cj, pj, d_product, rows); Should be called here but doesn't work.
 	}
-	
 	__syncthreads();
-}*/
+}
 
-//Attempt at adding this first before adding it to the bigger system.
 /*sparseMatrixVectorMultiplication should multithred solving matrix multiplication of a sparse matrix and
 a vector.*/
 __global__ void sparseMatrixVectorMultiplication(double* d_cj, double* p_j, double* d_product, int vRows, int aRow) {
+	
 	int row = blockIdx.y * blockDim.y + threadIdx.y;
 	int col = blockIdx.x * blockDim.x + threadIdx.x;
-	//int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	double product_val = 0.0;
 	//m_A(Row) x m_B(column) gives matrix product size matrix.
 	//VECTOR rows same size as MATRIX columns
@@ -154,19 +141,15 @@ __global__ void sparseMatrixVectorMultiplication(double* d_cj, double* p_j, doub
 		}
 		d_product[row*vRows+col] = product_val;
 		__syncthreads();
-	
 }
 
 
 // h -> defines host
 // d -> defines device
 void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* h_qn1, double* h_pspring, double* h_pattach) {
-
 	double *d_b, *d_pj, *d_qn1, *d_pspring, *d_pattach; //Device memory.
 	CudaConstraint* d_cj;
-	//Instead of directly using Eigen use .data and conver it to a float3
 	// Conversion Dense to Sparse using cusparseDenseToSparse
-
 
 	//d_b = h_b;
 	//d_pj = h_pj;
@@ -207,13 +190,10 @@ void Converge::Converge(CudaConstraint* h_cj, double* h_b,double* h_pj, double* 
 double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, int size) {
 	double* d_cj;
 	double* d_pj, *d_product;
-	//std::cout << a->row << std::endl;
-	//std::cout << size << std::endl;
 
 	double* h_product = (double*)malloc((a->row)*sizeof(double));
 	
 	int n = a->row * a->col;
-	//dim3 grid(1, 1), block(a->row, 1);
 
 	ERRCHECK(cudaMalloc((void**)&d_cj, n * sizeof(double)));
 	ERRCHECK(cudaMalloc((void**)&d_product, (a->row) * sizeof(double)));
@@ -223,8 +203,10 @@ double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, int size) {
 	ERRCHECK(cudaMemcpy(d_cj,v, n*sizeof(double), cudaMemcpyHostToDevice));
 	ERRCHECK(cudaMemcpy(d_pj, h_pj, size * sizeof(double), cudaMemcpyHostToDevice));
 	ERRCHECK(cudaMemcpy(d_product, h_product, (a->row) * sizeof(double), cudaMemcpyHostToDevice));
+	
 	dim3 grid(a->row, a->col);
 	sparseMatrixVectorMultiplication<<<grid,1>>>(d_cj, d_pj, d_product, size, a->row);
+	
 	ERRCHECK(cudaPeekAtLastError());
 	ERRCHECK(cudaDeviceSynchronize());
 
@@ -237,8 +219,3 @@ double* Converge::MatrixMulTest(CudaConstraint* a, double* h_pj, int size) {
 	//h_product will definetly cause a memory leak.
 	return h_product;
 }
-
-void Converge::ConvertDenseToCuSparse(CudaConstraint* h_cj) {
-}
-//Will need a function that will convert position and velocity to float3
-//Returning of p_j will be needed. To be used on the global solver.

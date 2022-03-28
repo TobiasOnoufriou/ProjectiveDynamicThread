@@ -362,7 +362,10 @@ void Simulation::CreateRHSMatrix()
 
 
 
-
+/// <summary>
+/// My implementation below in the average computation function.
+/// </summary>
+/// <param name="time"></param>
 void Simulation::averageComputation(__int64 time) {
 	this->average.push_back(time);
 	float average_sum = 0;
@@ -416,11 +419,6 @@ void Simulation::Update()
 
 			SparseMatrix coeff = m_mesh->m_mass_matrix / (m_h * m_h);
 			coeff.applyThisOnTheLeft(s_n);
-
-			
-			//Length of Eigen Array should not change size.
-			//std::cout << sc->ConvertCVectorToEigen(s_n.data(), s_n.size()).size() << std::endl;
-
 			//Before simulation we'll need to get Spring and Attachment constraint values into an array.
 			
 			this->iter_average++;
@@ -509,17 +507,9 @@ void Simulation::Update()
 									p_j->block_vector( 2 ) = tet_verts_new.block_vector( 2 );
 									p_j->block_vector( 3 ) = tet_verts_new.block_vector( 3 );
 								}
-								if (constraintType == ATTACHMENT) {
-									//std::cout << m_cuda_constraints[tn]->row << std::endl;
-									//std::cout << c_j->m_RHS.cols() << std::endl;
-									//std::cout << c_j->m_RHS.rows() << std::endl;
-									//std::cout << c_j->m_RHS.outerSize() << std::endl;
-									//std::cout << c_j->m_RHS.innerSize() << std::endl;
-									
-								}
 								p_j = &c_j->ConvertCVectorToEigen(Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows), (m_cuda_constraints[tn]->row));
 								
-								//c_j->m_RHS.applyThisOnTheLeft(*p_j);
+								//c_j->m_RHS.applyThisOnTheLeft(*p_j); To enable working solution uncomment here.
 
 								//std::cout << p_j->rows() << std::endl;
 								//std::cout << p_j->isApprox(*pp_j) << std::endl;
@@ -529,7 +519,6 @@ void Simulation::Update()
 						}
 					}
 				}
-
 				// GLOBAL SOLVE STEP
 				q_n1 = m_llt.solve(b);
 			}
