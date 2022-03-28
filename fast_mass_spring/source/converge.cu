@@ -20,14 +20,6 @@ inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort =
 }
 ///// ABOVE CODE CREDITED TO: https://stackoverflow.com/questions/42180066/cudamemcpy-struct-device-to-host-not-working //// 
 
-__device__ double3 make_double3(double x, double y, double z) {
-	double3 out;
-	out.x = x;
-	out.y = y;
-	out.z = z;
-	return out;
-}
-
 __device__ double3 operator-(const double3& a, const double3& b) {
 	return make_double3(a.x - b.x, a.y - b.y, a.z - b.z);
 }
