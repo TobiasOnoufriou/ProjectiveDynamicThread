@@ -137,6 +137,11 @@ protected:
 
 	// for optimization method, number of iterations
 	unsigned int m_iterations_per_frame;
+	unsigned int iter_average;
+
+	//Vector for all averages.
+	std::vector<_int64> average;
+
 
 	// line search for gradient descent and newton's method
 	bool m_enable_line_search;
@@ -175,7 +180,7 @@ private:
 	void calculateExternalForce(); // wind force is propotional to the area of triangles projected on the tangential plane
 	VectorX collisionDetection(const VectorX x); // detect collision and return a vector of penetration
 	bool selfCollisionDetection(EigenVector3& p, EigenVector3& normal, unsigned int index, ScalarType& dist);
-
+	void averageComputation(__int64 time);
 	// there should also be such functions that...
 	// handles traditional time integration methods such as EE, Baraff-Witkin, etc..
 	// handles optimization implicit method

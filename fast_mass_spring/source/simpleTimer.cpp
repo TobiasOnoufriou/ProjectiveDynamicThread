@@ -18,10 +18,11 @@ void simpleTimer::start()
 	start_time = GetTimeMs64();
 }
 
-void simpleTimer::stop( std::string some_desriptor )
+__int64 simpleTimer::stop( std::string some_desriptor )
 {
 	__int64 end_time = GetTimeMs64();
-	std::cout << some_desriptor << ": " << end_time - start_time << " milliseconds" << std::endl;
+	//std::cout << some_desriptor << ": " << end_time - start_time << " milliseconds" << std::endl;
+	return end_time - start_time;
 }
 
 __int64 simpleTimer::GetTimeMs64()
