@@ -43,6 +43,9 @@ Simulation::Simulation()
 	////////////////////////////////////////////////////
 	// setup A matrix for attachment constraint
 	////////////////////////////////////////////////////
+	iter_average = 0;
+	average.resize(50);
+
 
 	std::vector<SparseMatrixTriplet> att_triplets;
 
@@ -339,10 +342,26 @@ void Simulation::CreateRHSMatrix()
 }
 
 
+
+
+
+void Simulation::averageComputation(__int64 time) {
+	this->average.push_back(time);
+	float average_sum = 0;
+	if (iter_average == 50) {
+		for (std::vector<__int64>::iterator it = average.begin(); it != average.end(); ++it) {
+			average_sum += *it;
+		}
+		average_sum = average_sum / iter_average;
+		iter_average = 0;
+		average.clear();
+		std::cout << "Average ms: " << average_sum << std::endl;
+	} 
+}
+
 ////////////////////////////////////////////////////
 // Update()
 ////////////////////////////////////////////////////
-
 void Simulation::Update()
 {
 	// update inertia term
@@ -367,7 +386,7 @@ void Simulation::Update()
 			AttachmentConstraint* ac;
 			SpringConstraint *sc;
 			TetConstraint *tc;
-					
+
 			VectorX* p_j;
 			Constraint* c_j;
 			unsigned int tn;
@@ -379,16 +398,19 @@ void Simulation::Update()
 			SparseMatrix coeff = m_mesh->m_mass_matrix / (m_h * m_h);
 			coeff.applyThisOnTheLeft(s_n);
 			
+			this->iter_average++;
 			// LOCAL SOLVE STEP
+			simpleTimer localTimer;
+			localTimer.start();
 			for (int i = 0; i < m_iterations_per_frame; i++)
 			{
-				simpleTimer localTimer;
 
 				VectorX b = s_n;
-
 				EigenVector3 current_vector;
 				ScalarType current_stretch;
 				int constraintType;
+
+				
 
 				int num_parallel_loops = ceil( m_constraints.size() / (float) omp_get_max_threads() );
 				for (int j = 0; j < num_parallel_loops; j++)
@@ -452,7 +474,8 @@ void Simulation::Update()
 							}
 						}
 					}
-				}			
+				}
+
 				// GLOBAL SOLVE STEP
 				q_n1 = m_llt.solve(b);
 			}
@@ -460,7 +483,8 @@ void Simulation::Update()
 			VectorX v_n1 = (q_n1 - q_n)/m_h;
 			m_mesh->m_current_positions = q_n1;
 			m_mesh->m_current_velocities = v_n1;
-		
+
+			averageComputation(localTimer.stop("Local"));
 			break;
 		}
 	}
