@@ -1,7 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fast_mass_spring", "fast_mass_spring\fast_mass_spring.vcxproj", "{AC8EBA1C-A396-4C4C-ADF8-1264CE5C3104}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTest", "GoogleTest\GoogleTest\GoogleTest.vcxproj", "{A644A4E7-5101-4B85-86EE-92D005267355}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unittest_fast_mass_spring", "unittest_fast_mass_spring\unittest_fast_mass_spring.vcxproj", "{11128DD6-DB55-497A-AF63-4D7F68E50ABD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,8 +25,23 @@ Global
 		{AC8EBA1C-A396-4C4C-ADF8-1264CE5C3104}.Release|Win32.Build.0 = Release|Win32
 		{AC8EBA1C-A396-4C4C-ADF8-1264CE5C3104}.Release|x64.ActiveCfg = Release|x64
 		{AC8EBA1C-A396-4C4C-ADF8-1264CE5C3104}.Release|x64.Build.0 = Release|x64
+		{A644A4E7-5101-4B85-86EE-92D005267355}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A644A4E7-5101-4B85-86EE-92D005267355}.Debug|Win32.Build.0 = Debug|Win32
+		{A644A4E7-5101-4B85-86EE-92D005267355}.Debug|x64.ActiveCfg = Debug|Win32
+		{A644A4E7-5101-4B85-86EE-92D005267355}.Release|Win32.ActiveCfg = Release|Win32
+		{A644A4E7-5101-4B85-86EE-92D005267355}.Release|Win32.Build.0 = Release|Win32
+		{A644A4E7-5101-4B85-86EE-92D005267355}.Release|x64.ActiveCfg = Release|Win32
+		{11128DD6-DB55-497A-AF63-4D7F68E50ABD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{11128DD6-DB55-497A-AF63-4D7F68E50ABD}.Debug|Win32.Build.0 = Debug|Win32
+		{11128DD6-DB55-497A-AF63-4D7F68E50ABD}.Debug|x64.ActiveCfg = Debug|Win32
+		{11128DD6-DB55-497A-AF63-4D7F68E50ABD}.Release|Win32.ActiveCfg = Release|Win32
+		{11128DD6-DB55-497A-AF63-4D7F68E50ABD}.Release|Win32.Build.0 = Release|Win32
+		{11128DD6-DB55-497A-AF63-4D7F68E50ABD}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D111D3E7-ECF7-411D-939A-8B843A958A92}
 	EndGlobalSection
 EndGlobal

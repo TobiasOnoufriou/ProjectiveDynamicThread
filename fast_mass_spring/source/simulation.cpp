@@ -352,8 +352,6 @@ void Simulation::CreateRHSMatrix()
 
 		c->ConvertSparseMatrixToCArray(*cc, c->m_RHS);		   //Convert the calculated sparse matrix to dense matrix
 											  //This can be used to convert back to sparse when calculation completes
-	
-
 		// Call conversion to sparse 
 		//c->ConvertSparseMatrixToCArray(*cc);
 	}	
@@ -507,9 +505,9 @@ void Simulation::Update()
 									p_j->block_vector( 2 ) = tet_verts_new.block_vector( 2 );
 									p_j->block_vector( 3 ) = tet_verts_new.block_vector( 3 );
 								}
-								p_j = &c_j->ConvertCVectorToEigen(Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows), (m_cuda_constraints[tn]->row));
+								//p_j = &c_j->ConvertCVectorToEigen(Converge::MatrixMulTest(m_cuda_constraints[tn], p_j->data(), rows), (m_cuda_constraints[tn]->row));
 								
-								//c_j->m_RHS.applyThisOnTheLeft(*p_j); To enable working solution uncomment here.
+								c_j->m_RHS.applyThisOnTheLeft(*p_j); //To enable working solution uncomment here.
 
 								//std::cout << p_j->rows() << std::endl;
 								//std::cout << p_j->isApprox(*pp_j) << std::endl;

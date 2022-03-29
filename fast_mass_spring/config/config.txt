@@ -1,30 +1,30 @@
 HasEnd              0
 TotalFrame          1000
 MeshBody            1
-Wireframe           0
+Wireframe           1
 Wireframe           1
 Texture             0
-ScreenWidth         1512
-ScreenHeight        881
+ScreenWidth         2560
+ScreenHeight        1377
 
 MeshType            2
 MeshMass            1
-TetFilePath         ./mesh_models/cube86.mesh
+TetFilePath         ./mesh_models/RopeTri.mesh
 TetScaling          1
 TetFlip             0
 ClothDimension      21 21
 ClothCorners        -5 8 -5 5 -1.85 -3.26
-RopeLength			200
+RopeLength			100
 RopeStart			5 5 5 
 
 SimMethod           1
 Timestep            0.0333
 QuasiStatics        0
 Subspace            1
-AttachmentStiffness 120
+AttachmentStiffness 2000
 StretchStiffness    80
 BendingStiffness    20
-GravityConstant     100
+GravityConstant     9.81
 DampingCoefficient  0.001
 IterationsPerFrame  1
 LSEnable            1
