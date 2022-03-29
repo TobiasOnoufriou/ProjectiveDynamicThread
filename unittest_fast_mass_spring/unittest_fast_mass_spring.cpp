@@ -29,3 +29,21 @@ TEST(EnsureDouble3ToDoubleWorks, double3ToDouble) {
 	double real[3] = { 10, 10, 10 };
 	ASSERT_EQ(real, double3ToDouble(a));
 }
+
+TEST(EnsureAjoinVectorArrayWorks, aJoinVectorArray) {
+	double a[3] = { 10, 3 ,4 };
+	double b[3] = { 5, 4,2 };
+	double c[6] = { 10, 3, 4, 5, 4, 2 };
+	double* out;
+
+	ajoinVectorArray(a, b, out);
+
+	EXPECT_TRUE(0 == std::memcmp(c, out, sizeof(c)));
+}
+
+TEST(EnsureNormaliseWorks, normalise) {
+	double3 a = make_double3(3, 4, 2);
+	
+	double3 expected = make_double3(0.5570860145311556, 0.7427813527082074, 0.3713906763541037);
+	ASSERT_EQ(expected, normalise(a));
+}
