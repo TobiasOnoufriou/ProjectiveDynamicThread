@@ -9,7 +9,7 @@ Implementation for final year project:
 
 
 Files contributed to: 
-CudaConstraint.cpp, CudaConstraint.h, converge.cu, converge.cuh, simpleTimer.cpp (Change return type for averageComputation), simpleTimer.h and simulation.h, simulation.cpp and anttweakbar_wrapper.cpp (for UI to change the amount of joints of the thread)
+CudaConstraint.cpp, CudaConstraint.h, converge.cu, converge.cuh, simpleTimer.cpp (Change return type for averageComputation), simpleTimer.h and simulation.h, simulation.cpp, anttweakbar_wrapper.cpp (for UI to change the amount of joints of the thread), constraint.cpp and constraint.h
 
 
 Source files are in fast_mass_spring/source
