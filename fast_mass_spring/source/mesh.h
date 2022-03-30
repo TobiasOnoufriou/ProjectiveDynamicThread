@@ -200,6 +200,7 @@ protected:
 	virtual void generateTriangleList();
 };
 
+// Class RopeMesh created by TobiasOnoufriou.
 class RopeMesh : public Mesh {
 	friend class AntTweakBarWrapper;
 	friend class Simulation;

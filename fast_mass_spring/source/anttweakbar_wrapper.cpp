@@ -121,7 +121,7 @@ void AntTweakBarWrapper::Init()
 	TwType meshTypeStyle = TwDefineEnum("MeshType", meshTypeStyleEV, 3);
 	TwAddVarRW(m_mesh_bar, "Mesh Type", meshTypeStyle, &g_mesh->m_mesh_type, " ");
 	TwAddVarRW(m_mesh_bar, "Total Mass", TW_TYPE_SCALAR_TYPE, &(g_mesh->m_total_mass), " ");
-	// Rope Settigs
+	// Rope Settigs added by Tobias Onoufriou
 	TwAddVarRW(m_mesh_bar, "Joint", TW_TYPE_INT32, (&g_mesh->m_joints), "label='Rope Length' min=2 group='Rope Joint'");
 	TwDefine(" 'Mesh Settings'/'Rope Joint' group='Rope Settings'");
 	TwAddVarRW(m_mesh_bar, "rx", TW_TYPE_SCALAR_TYPE, (&g_mesh->m_rope_start[0]), "label='X' group='Rope Start Position'");
@@ -244,6 +244,7 @@ int AntTweakBarWrapper::Update()
 	}
 
 	// mesh settings display
+	//Lines with RopeSettings added by Tobias Onoufriou.
 	switch (g_mesh->m_mesh_type)
 	{
 	case MESH_TYPE_TET:
@@ -380,7 +381,7 @@ void AntTweakBarWrapper::SaveSettings()
 										  << g_mesh->m_rope_start[2] << " " \
 										  << std::endl;
 		outfile << std::endl;
-
+		//Lines with RopeLength and RopeStart added by TobiasOnoufriou
 		// simulation settings:
 		outfile << "SimMethod           " << g_simulation->m_integration_method << std::endl;
 		outfile << "Timestep            " << g_simulation->m_h << std::endl;

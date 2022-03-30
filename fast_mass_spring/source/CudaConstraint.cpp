@@ -1,5 +1,5 @@
 #include "CudaConstraint.h"
-
+//Functions below are created by Tobias Onoufriou
 CudaAttachmentConstraint::CudaAttachmentConstraint(double* fixedPoint, unsigned int vertex_index) {
 	this->m_fixed_point = fixedPoint;
 	this->m_vertex_index = vertex_index;

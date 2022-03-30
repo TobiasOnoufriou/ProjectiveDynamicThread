@@ -1,5 +1,5 @@
 // unittest_fast_mass_spring.cpp : Defines the entry point for the console application.
-//
+// Code below created by Tobias Onoufriou
 #include "gtest/gtest.h"
 #include "mesh.h"
 #include "converge.cu"

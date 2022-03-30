@@ -50,7 +50,7 @@ void Mesh::Cleanup()
 	m_triangle_list.clear();
 }
 
-// Specialised for the rope, to draw a line.
+// Specialised for the rope, to draw a line. function below created by Tobias Onoufriou.
 void Mesh::DrawLine(const VBO& vbos, int line_width) {
 	unsigned int size = m_vertices_number;
 
@@ -686,6 +686,7 @@ void TetMesh::generateTriangleList()
 	}
 }
 
+// RopeMesh Init, GetMeshInfo, generateEdgeList and generateParticleList created by Tobias Onoufriou.
 bool RopeMesh::Init() {
 	generateParticleList();
 	generateEdgeList();

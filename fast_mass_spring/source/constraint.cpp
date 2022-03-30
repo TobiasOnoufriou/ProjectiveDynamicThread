@@ -57,6 +57,7 @@ Constraint::~Constraint()
 {
 }
 
+//ConvertedCVectorToEigen created by Tobias Onoufriou.
 VectorX Constraint::ConvertCVectorToEigen(double* arr, unsigned int size){
 	typedef Eigen::Map<VectorX> MapType;
 	typedef Eigen::Map<const VectorX> MapTypeConst;
@@ -67,7 +68,7 @@ VectorX Constraint::ConvertCVectorToEigen(double* arr, unsigned int size){
 	return v;
 }
 
-
+//ConvertSparseMatrixToCArray created by Tobias Onoufriou
 void Constraint::ConvertSparseMatrixToCArray(CudaConstraint& cc, SparseMatrix s) {
 	/*cc.num_non0 = m_RHS.nonZeros();
 	cc.num_outer = m_RHS.cols() + 1;

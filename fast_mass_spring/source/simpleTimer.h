@@ -11,6 +11,7 @@ public:
 
 	// methods
 	void start( void );
+	// function below adjusted to return __int64 rather than just printing to the console edited by Tobias Onoufriou.
 	__int64 stop( std::string some_desriptor );
 	
 private:

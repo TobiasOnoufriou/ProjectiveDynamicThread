@@ -49,8 +49,8 @@ class Constraint
 public:
 	Constraint(ScalarType *stiffness);
 	Constraint(const Constraint& other);
-	VectorX ConvertCVectorToEigen(double* arr, unsigned int size);
-	void ConvertSparseMatrixToCArray(CudaConstraint& cc, SparseMatrix s);
+	VectorX ConvertCVectorToEigen(double* arr, unsigned int size); // Line added by Tobias Onoufriou
+	void ConvertSparseMatrixToCArray(CudaConstraint& cc, SparseMatrix s); // Line added by Tobias Onoufriou
 	//void ConvertCArrayToSparseMatrix(CudaConstraint& cc, SparseMatrix s);
 	virtual ~Constraint();
 

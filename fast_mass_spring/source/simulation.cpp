@@ -346,7 +346,7 @@ void Simulation::CreateRHSMatrix()
 		S_i_transpose.applyThisOnTheLeft(A_i);
 		A_i.applyThisOnTheLeft(B_i);
 		c->m_RHS = w_i * B_i;
-		// TODO: Create to convert m_RHS to array.
+		// TODO: Create to convert m_RHS to array. Lines added below created by Tobias Onofriou
 		cc->row = c->m_RHS.rows();
 		cc->col = c->m_RHS.cols();
 
@@ -361,7 +361,7 @@ void Simulation::CreateRHSMatrix()
 
 
 /// <summary>
-/// My implementation below in the average computation function.
+/// My implementation below in the averageComputation function.
 /// </summary>
 /// <param name="time"></param>
 void Simulation::averageComputation(__int64 time) {
@@ -419,12 +419,8 @@ void Simulation::Update()
 			coeff.applyThisOnTheLeft(s_n);
 			//Before simulation we'll need to get Spring and Attachment constraint values into an array.
 			
-			this->iter_average++;
-
-
+			this->iter_average++; //Line of code added by Tobias Onoufriou
 			//After completion convert back to their original Eigenvalue
-
-
 			// LOCAL SOLVE STEP
 			simpleTimer localTimer;
 			localTimer.start();
@@ -522,9 +518,9 @@ void Simulation::Update()
 			}
 			VectorX v_n1 = (q_n1 - q_n)/m_h;
 			m_mesh->m_current_positions = q_n1;
-			m_mesh->m_current_velocities = v_n1;
+ 			m_mesh->m_current_velocities = v_n1;
 
-			averageComputation(localTimer.stop("Local"));
+			averageComputation(localTimer.stop("Local")); //Line of code added by Tobias Onoufriou
 			break;
 		}
 	}
@@ -752,10 +748,10 @@ void Simulation::clearConstraints()
 	for (unsigned int i = 0; i < m_constraints.size(); ++i)
 	{
 		delete m_constraints[i];
-		delete m_cuda_constraints[i];
+		delete m_cuda_constraints[i]; //Line of code added by Tobias Onoufriou
 	}
 	m_constraints.clear();
-	m_cuda_constraints.clear();
+	m_cuda_constraints.clear(); //Line of code added by Tobias Onoufriou
 }
 
 void Simulation::setupConstraints()
@@ -764,6 +760,9 @@ void Simulation::setupConstraints()
 
 	switch(m_mesh->m_mesh_type)
 	{
+	/// <summary>
+	/// MESH_TYPE_ROPE case scope created by Tobias Onoufriou.
+	/// </summary>
 	case MESH_TYPE_ROPE:
 	{
 		EigenVector3 pR1, pR2;
@@ -963,10 +962,10 @@ VectorX Simulation::collisionDetection(const VectorX x)
 	return penetration;
 }
 
-
+// Below is attempt at selfCollision detection following the current collisionDetection function.
 bool Simulation::selfCollisionDetection(EigenVector3& p, EigenVector3& normal, unsigned int index, ScalarType& dist) {
 	dist = 0;
-	//Loop through each point which is not its own point to check if it has collided.
+	// Loop through each point which is not its own point to check if it has collided.
 	// Parse the block_vector(i) .. then loop through every point and check the distance.
 	// if i == block_vector(xi) .. skip
 	//for(unsigned int i = 0; i < 0; i++)

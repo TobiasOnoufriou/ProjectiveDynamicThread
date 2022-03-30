@@ -1,5 +1,7 @@
 #pragma once
 
+// Class definitions below are created by Tobias Onoufriou.
+
 // Attachment and Spring constraint
 enum {ATT, SPR};
 
